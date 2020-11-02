@@ -15,8 +15,6 @@ typedef signed long i64;
 typedef float f32;
 typedef double f64;
 
-typedef char bool;
-
 #define ALLOC(T) (T *)malloc(sizeof(T))
 
 #define FREE(x) free(x)

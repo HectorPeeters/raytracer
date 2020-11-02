@@ -23,7 +23,7 @@ project "raytracer"
 
     includedirs { "include/", "libs/glad/include/", "libs/glfw/include/", "libs/glm/", "libs/imgui/", "libs/imgui/examples" }
     
-    files { "src/*.c" }
+    files { "src/*.cpp" }
 
     links { "GLFW", "GLM", "GLAD", "ImGui" }
 
