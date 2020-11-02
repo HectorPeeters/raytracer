@@ -2,7 +2,7 @@ workspace "raytracer"
     configurations { "Debug", "Release" }
     startproject "OpenGLBoilerPlate"
 
-    flags { "MultiProcessorCompile" }
+    flags { "MultiProcessorCompile", "FatalWarnings" }
 
     filter "configurations:Debug"
         defines { "DEBUG" }
@@ -15,7 +15,7 @@ workspace "raytracer"
 
 project "raytracer"
     kind "ConsoleApp"
-    language "C"
+    language "C++"
     architecture "x86_64"
 
     targetdir "bin/%{cfg.buildcfg}"
