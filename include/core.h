@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 
+#include "log.h"
+
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -16,5 +18,10 @@ typedef float f32;
 typedef double f64;
 
 #define ALLOC(T) (T *)malloc(sizeof(T))
+#define ALLOC_SIZED(T, S) (T *)malloc(S * sizeof(T))
 
 #define FREE(x) free(x)
+
+#define ASSERT(x)                                                              \
+  if (!x)                                                                      \
+    LERR("Assertion failed!");

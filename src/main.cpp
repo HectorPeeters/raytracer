@@ -1,15 +1,16 @@
-#include "log.h"
 #include "application.h"
+#include "log.h"
 
 int main() {
-  struct application_t* application = application_create();
+  struct application_t *application = application_create();
 
   LINFO("Startup complete");
 
-  while (application_update(application)) {}
+  while (application_update(application)) {
+  }
 
   LINFO("Shutting down...");
-  
+
   application_destroy(application);
 
   return 0;
