@@ -5,8 +5,7 @@
 #include "log.h"
 
 static void on_window_resize(GLFWwindow *window, int width, int height) {
-  struct window_t *window_ptr =
-      (struct window_t *)glfwGetWindowUserPointer(window);
+  struct window_t *window_ptr = ALLOC(struct window_t);
   window_ptr->width = width;
   window_ptr->height = height;
   glViewport(0, 0, width, height);
@@ -60,7 +59,7 @@ bool window_should_close(struct window_t *window) {
 void window_destroy(struct window_t *window) {
   glfwDestroyWindow(window->glfw_window);
   glfwTerminate();
-  free(window);
+  FREE(window);
 
   LDEBG("Destroyed GLFW window");
 }
