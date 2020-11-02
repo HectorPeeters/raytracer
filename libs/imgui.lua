@@ -1,12 +1,12 @@
 project "ImGui"
 	kind "StaticLib"
-	language "C"
+	language "C++"
 	architecture "x86_64"
 
 	targetdir "../bin/%{cfg.buildcfg}"
 	objdir "../obj/%{cfg.buildcfg}"
 	
-	includedirs { "imgui/", "imgui/examples/", "glad/include", "glfw/include/" }
+	includedirs { "imgui/", "imgui/backends/", "glad/include", "glfw/include/" }
 
 	files
 	{

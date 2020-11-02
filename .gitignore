@@ -7,3 +7,5 @@ Makefile
 *.swp
 .ccls-cache/
 compile_commands.json
+
+imgui.ini
