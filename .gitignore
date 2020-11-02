@@ -1,0 +1,8 @@
+bin/
+obj/
+
+Makefile
+*.make
+
+*.swp
+.ccls-cache/
