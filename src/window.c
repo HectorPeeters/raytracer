@@ -2,16 +2,20 @@
 
 #include <stdlib.h>
 
+#include "log.h"
+
 static void on_window_resize(GLFWwindow *window, int width, int height) {
   struct window_t *window_ptr =
       (struct window_t *)glfwGetWindowUserPointer(window);
   window_ptr->width = width;
   window_ptr->height = height;
   glViewport(0, 0, width, height);
+  LDEBG("Window resized: %d, %d", width, height);
 }
 
 struct window_t *window_create(u16 width, u16 height, const char *title) {
   if (!glfwInit()) {
+    LERR("Could not initialize GLFW");
     return 0;
   }
 
@@ -26,6 +30,7 @@ struct window_t *window_create(u16 width, u16 height, const char *title) {
   window->glfw_window = glfwCreateWindow(width, height, title, 0, 0);
 
   if (!window->glfw_window) {
+    LERR("Could not create GLFW window");
     return 0;
   }
 
@@ -36,6 +41,8 @@ struct window_t *window_create(u16 width, u16 height, const char *title) {
   glfwMakeContextCurrent(window->glfw_window);
 
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+
+  LDEBG("Created GLFW window");
 
   return window;
 }
@@ -54,4 +61,6 @@ void window_destroy(struct window_t *window) {
   glfwDestroyWindow(window->glfw_window);
   glfwTerminate();
   free(window);
+
+  LDEBG("Destroyed GLFW window");
 }
