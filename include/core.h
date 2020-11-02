@@ -17,6 +17,10 @@ typedef signed long i64;
 typedef float f32;
 typedef double f64;
 
+#define EPSILON 0.00001f
+
+#define APPROX_EQ(X, Y) abs(X - Y) < EPSILON
+
 #define ALLOC(T) (T *)malloc(sizeof(T))
 #define ALLOC_SIZED(T, S) (T *)malloc(S * sizeof(T))
 

@@ -16,6 +16,7 @@ struct application_t *application_create() {
   result->window = window_create(1920 / 2, 1080 / 2, "Raytracer");
   result->running = 1;
 
+
   setup_imgui(result->window);
 
   return result;
@@ -71,7 +72,7 @@ void imgui_beginframe() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
-  
+
   ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
   ImGuiWindowFlags window_flags =
@@ -93,15 +94,14 @@ void imgui_beginframe() {
 
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-  ImGui::Begin("DockSpace Demo",0,  window_flags);
+  ImGui::Begin("DockSpace Demo", 0, window_flags);
   ImGui::PopStyleVar();
 
   ImGui::PopStyleVar(2);
 
   // DockSpace
   ImGuiIO &io = ImGui::GetIO();
-  if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-  {
+  if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
     ImGuiID dockspace_id = ImGui::GetID("RootDockspace");
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
   }

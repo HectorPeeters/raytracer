@@ -1,11 +1,14 @@
 #pragma once
 
 #include "core.h"
+#include "texture.h"
 #include "window.h"
 
 struct application_t {
   bool running;
   struct window_t *window;
+
+  struct texture_t *texture;
 };
 
 struct application_t *application_create();
