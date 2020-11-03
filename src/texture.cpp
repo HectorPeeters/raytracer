@@ -34,6 +34,16 @@ void texture_data_set(struct texture_data_t *texture, u16 x, u16 y, u8 r, u8 g,
   texture->data[index + 3] = a;
 }
 
+void texture_data_clear(struct texture_data_t *texture, u16 r, u16 g, u16 b) {
+  ASSERT((texture->components == 3));
+
+  for (u32 i = 0; i < texture->width * texture->height; i++) {
+    texture->data[i * texture->components + 0] = r;
+    texture->data[i * texture->components + 0] = g;
+    texture->data[i * texture->components + 0] = b;
+  }
+}
+
 void texture_data_destroy(struct texture_data_t *texture) {
   FREE(texture->data);
   FREE(texture);
@@ -46,7 +56,6 @@ struct texture_t *texture_create(u16 width, u16 height, u8 components) {
 struct texture_t *texture_create(struct texture_data_t *data) {
   struct texture_t *texture = ALLOC(texture_t);
 
-  LDEBG("Texture id: %p", &texture->id);
 
   glGenTextures(1, &texture->id);
   glBindTexture(GL_TEXTURE_2D, texture->id);
