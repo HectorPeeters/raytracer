@@ -16,7 +16,7 @@ struct texture_data_t *texture_data_create(u16 width, u16 height,
 
 void texture_data_set(struct texture_data_t *texture, u16 x, u16 y, u8 r, u8 g,
                       u8 b) {
-  ASSERT(texture->components == 3);
+  ASSERT((texture->components == 3));
 
   u32 index = (x + y * texture->width) * texture->components;
   texture->data[index + 0] = r;
@@ -25,7 +25,7 @@ void texture_data_set(struct texture_data_t *texture, u16 x, u16 y, u8 r, u8 g,
 }
 void texture_data_set(struct texture_data_t *texture, u16 x, u16 y, u8 r, u8 g,
                       u8 b, u8 a) {
-  ASSERT(texture->components == 4);
+  ASSERT((texture->components == 4));
 
   u32 index = (x + y * texture->width) * texture->components;
   texture->data[index + 0] = r;
