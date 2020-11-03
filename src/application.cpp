@@ -13,13 +13,13 @@ void imgui_endframe();
 struct application_t *application_create() {
   struct application_t *result = ALLOC(struct application_t);
 
-  result->window = window_create(1920 / 2, 1080 / 2, "Raytracer");
+  result->window = window_create(1920 / 3 * 2, 1080 / 3 * 2, "Raytracer");
   result->running = 1;
   result->texture = texture_create(texture_data_create(512, 512, 3));
 
   for (u16 i = 0; i < 512; i++) {
     for (u16 j = 0; j < 512; j++) {
-      texture_data_set(result->texture->data, i, j, u8(i * 2), u8(j * 2),
+      texture_data_set(result->texture->data, i, j, u8(i / 2), u8(j / 2),
                        u8(255));
     }
   }
@@ -69,9 +69,23 @@ bool application_update(struct application_t *application) {
   // Rendering here!
   ImGui::ShowDemoWindow();
 
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
   ImGui::Begin("Texture Test");
-  ImGui::Image((void *)(intptr_t)application->texture->id, ImVec2(500, 500));
+
+  ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+  
+  int smallestSize = viewportPanelSize.x < viewportPanelSize.y ? viewportPanelSize.x : viewportPanelSize.y;
+
+  ImVec2 image_pos = ImVec2(
+    ImGui::GetCursorPos().x + (ImGui::GetContentRegionAvail().x - smallestSize) * 0.5,
+    ImGui::GetCursorPos().y + (ImGui::GetContentRegionAvail().y - smallestSize) * 0.5
+  );
+  ImGui::SetCursorPos(image_pos);
+
+  ImGui::Image((void*)(u64)application->texture->id, ImVec2(smallestSize, smallestSize), ImVec2(0, 1), ImVec2(1, 0));
+
   ImGui::End();
+  ImGui::PopStyleVar();
 
   imgui_endframe();
 

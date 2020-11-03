@@ -27,5 +27,5 @@ typedef double f64;
 #define FREE(x) free(x)
 
 #define ASSERT(x)                                                              \
-  if (!x)                                                                      \
+  if (!(x))                                                                    \
     LERR("Assertion failed!");

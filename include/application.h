@@ -8,7 +8,7 @@ struct application_t {
   bool running;
   struct window_t *window;
 
-  struct opengl_texture_t *texture;
+  struct texture_t *texture;
 };
 
 struct application_t *application_create();
