@@ -25,7 +25,8 @@ struct application_t *application_create() {
 
   for (int i = 0; i < 1920; i++) {
     for (int j = 0; j < 1080; j++)
-      texture_data_set(result->state.texture, i, j, u8(i / 1920.0 * 255.0), u8(j / 1920.0 * 255.0), 255);
+      texture_data_set(result->state.texture, i, j, u8(i / 1920.0 * 255.0),
+                       u8(j / 1920.0 * 255.0), 255);
   }
   texture_update_data(result->texture);
 
@@ -140,21 +141,23 @@ void imgui_draw_raytraced_texture(struct application_t *application) {
 
   ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 
-  float aspect = application->texture->data->width / float(application->texture->data->height);
+  float aspect = application->texture->data->width /
+                 float(application->texture->data->height);
 
   int smallestSize = viewportPanelSize.x / aspect < viewportPanelSize.y
                          ? viewportPanelSize.x / aspect
                          : viewportPanelSize.y;
 
-  ImVec2 image_pos =
-      ImVec2(ImGui::GetCursorPos().x +
-                 (ImGui::GetContentRegionAvail().x - smallestSize * aspect) * 0.5,
-             ImGui::GetCursorPos().y +
-                 (ImGui::GetContentRegionAvail().y - smallestSize) * 0.5);
+  ImVec2 image_pos = ImVec2(
+      ImGui::GetCursorPos().x +
+          (ImGui::GetContentRegionAvail().x - smallestSize * aspect) * 0.5,
+      ImGui::GetCursorPos().y +
+          (ImGui::GetContentRegionAvail().y - smallestSize) * 0.5);
   ImGui::SetCursorPos(image_pos);
 
   ImGui::Image((void *)(u64)application->texture->id,
-               ImVec2(smallestSize * aspect, smallestSize), ImVec2(0, 1), ImVec2(1, 0));
+               ImVec2(smallestSize * aspect, smallestSize), ImVec2(0, 1),
+               ImVec2(1, 0));
 
   ImGui::End();
   ImGui::PopStyleVar();
@@ -166,15 +169,30 @@ void imgui_draw_render_settings(struct application_t *application) {
   // Resolution input field
   i32 resolution[2]{application->state.settings.width,
                     application->state.settings.height};
-  ImGui::InputInt2("Resolution", resolution);
-  application->state.settings.width = resolution[0];
-  application->state.settings.height = resolution[1];
+  if (ImGui::InputInt2("Resolution", resolution)) {
+    if (application->state.settings.width != resolution[0] ||
+        application->state.settings.height != resolution[1]) {
+      application->state.settings.width = resolution[0];
+      application->state.settings.height = resolution[1];
+      texture_data_resize(application->state.texture, resolution[0],
+                          resolution[1]);
+    }
+  }
 
   // Samples per pixel input field
-  ImGui::SliderInt("Samples Per Pixel", &application->state.settings.samples_per_pixel, 1, 1000);
+  ImGui::SliderInt("Samples Per Pixel",
+                   &application->state.settings.samples_per_pixel, 1, 1000);
 
   // Render button
-  ImGui::Button("Render");
+  if (ImGui::Button("Render")) {
+    for (int i = 0; i < 1920; i++) {
+      for (int j = 0; j < 1080; j++)
+        texture_data_set(application->state.texture, i, j,
+                         255 - u8(i / 1920.0 * 255.0), u8(j / 1920.0 * 255.0),
+                         255);
+    }
+    texture_update_data(application->texture);
+  }
 
   ImGui::End();
 }

@@ -44,6 +44,13 @@ void texture_data_clear(struct texture_data_t *texture, u16 r, u16 g, u16 b) {
   }
 }
 
+void texture_data_resize(struct texture_data_t *texture, u16 width, u16 height) {
+  FREE(texture->data);
+  texture->width = width;
+  texture->height = height;
+  texture->data = ALLOC_SIZED(u8, width * height * texture->components);
+}
+
 void texture_data_destroy(struct texture_data_t *texture) {
   FREE(texture->data);
   FREE(texture);
@@ -55,7 +62,6 @@ struct texture_t *texture_create(u16 width, u16 height, u8 components) {
 
 struct texture_t *texture_create(struct texture_data_t *data) {
   struct texture_t *texture = ALLOC(texture_t);
-
 
   glGenTextures(1, &texture->id);
   glBindTexture(GL_TEXTURE_2D, texture->id);

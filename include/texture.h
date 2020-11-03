@@ -17,7 +17,9 @@ void texture_data_set(struct texture_data_t *texture, u16 x, u16 y, u8 r, u8 g,
 void texture_data_set(struct texture_data_t *texture, u16 x, u16 y, u8 r, u8 g,
                       u8 b, u8 a);
 
-void texture_data_clear(struct texture_data_t *textuer, u16 r, u16 g, u16 b);
+void texture_data_clear(struct texture_data_t *texture, u16 r, u16 g, u16 b);
+
+void texture_data_resize(struct texture_data_t *texture, u16 width, u16 height);
 
 void texture_data_destroy(struct texture_data_t *texture);
 
