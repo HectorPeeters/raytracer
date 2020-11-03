@@ -22,14 +22,18 @@ void print_type(enum t_log_type type) {
 
 void rtlog(enum t_log_type type, int line, const char *file, const char *fmt,
            ...) {
+  // buffer we will use to print the message into
   char buffer[512];
 
+  // print the type of log message
   print_type(type);
 
+  // print the log message into the buffer
   va_list va;
   va_start(va, fmt);
   vsnprintf(buffer, sizeof(buffer), fmt, va);
   va_end(va);
 
+  // print the file and line info, and the log message buffer
   printf("[%s:%d] %s\n", file, line, buffer);
 }

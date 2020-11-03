@@ -3,10 +3,17 @@
 #include "core.h"
 
 struct texture_data_t {
+  // the width of the texture
   u16 width;
+
+  // the height of the texture
   u16 height;
+
+  // the amount of components each pixel has: rgb -> 3, rgba -> 4
   u8 components;
-  u8* data;
+
+  // the pixel data of the texture
+  u8 *data;
 };
 
 struct texture_data_t *texture_data_create(u16 width, u16 height,
@@ -24,7 +31,10 @@ void texture_data_resize(struct texture_data_t *texture, u16 width, u16 height);
 void texture_data_destroy(struct texture_data_t *texture);
 
 struct texture_t {
+  // the opengl id of the texture
   u32 id;
+  
+  // a pointer to the actual texture data
   struct texture_data_t *data;
 };
 

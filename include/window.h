@@ -13,7 +13,10 @@ struct window_t {
 };
 
 struct window_t *window_create(u16 width, u16 height, const char *title);
+
 void window_input();
 void window_update(struct window_t *window);
+
 bool window_should_close(struct window_t *window);
+
 void window_destroy(struct window_t *window);
