@@ -6,8 +6,6 @@
 int main() {
   struct application_t *application = application_create();
 
-  
-
   LINFO("Startup complete");
 
   while (application_update(application)) {

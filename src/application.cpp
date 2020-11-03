@@ -15,7 +15,15 @@ struct application_t *application_create() {
 
   result->window = window_create(1920 / 2, 1080 / 2, "Raytracer");
   result->running = 1;
+  result->texture = texture_create(texture_data_create(512, 512, 3));
 
+  for (u16 i = 0; i < 512; i++) {
+    for (u16 j = 0; j < 512; j++) {
+      texture_data_set(result->texture->data, i, j, u8(i * 2), u8(j * 2),
+                       u8(255));
+    }
+  }
+  texture_update_data(result->texture);
 
   setup_imgui(result->window);
 
@@ -60,6 +68,10 @@ bool application_update(struct application_t *application) {
 
   // Rendering here!
   ImGui::ShowDemoWindow();
+
+  ImGui::Begin("Texture Test");
+  ImGui::Image((void *)(intptr_t)application->texture->id, ImVec2(500, 500));
+  ImGui::End();
 
   imgui_endframe();
 

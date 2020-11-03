@@ -48,6 +48,19 @@ struct opengl_texture_t *texture_create(struct texture_data_t *data) {
 
   glCreateTextures(GL_TEXTURE_2D, 1, &texture->id);
 
+  glBindTexture(GL_TEXTURE_2D, texture->id);
+
+  u16 format;
+  if (texture->data->components == 4) {
+    format = GL_RGBA;
+  } else {
+    format = GL_RGB;
+  }
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, data->width, data->height, 0, format,
+               GL_UNSIGNED_BYTE, data->data);
+
+  LDEBG("Generated texture with id %d", texture->id);
+
   texture->data = data;
 
   return texture;
@@ -62,11 +75,12 @@ void texture_update_data(struct opengl_texture_t *texture) {
   } else {
     format = GL_RGB;
   }
-  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texture->data->width,
-                  texture->data->height, format, GL_UNSIGNED_BYTE,
-                  texture->data->data);
+  //  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texture->data->width,
+  //                  texture->data->height, format, GL_UNSIGNED_BYTE,
+  //                  texture->data->data);
 }
 
 void texture_destroy(struct opengl_texture_t *texture) {
   glDeleteTextures(1, &texture->id);
+  texture_data_destroy(texture->data);
 }
