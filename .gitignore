@@ -9,3 +9,5 @@ Makefile
 compile_commands.json
 
 imgui.ini
+
+.vscode/
