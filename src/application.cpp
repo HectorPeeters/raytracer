@@ -5,23 +5,27 @@
 #include <imgui.h>
 
 #include "log.h"
+#include "raytrace.h"
 
 void setup_imgui(struct window_t *window);
 void imgui_beginframe();
 void imgui_endframe();
+
+void imgui_draw_raytraced_texture(struct application_t *application);
+
+void imgui_draw_render_settings(struct application_t *application);
 
 struct application_t *application_create() {
   struct application_t *result = ALLOC(struct application_t);
 
   result->window = window_create(1920 / 3 * 2, 1080 / 3 * 2, "Raytracer");
   result->running = 1;
-  result->texture = texture_create(texture_data_create(512, 512, 3));
+  result->state = render_state_create();
+  result->texture = texture_create(result->state.texture);
 
-  for (u16 i = 0; i < 512; i++) {
-    for (u16 j = 0; j < 512; j++) {
-      texture_data_set(result->texture->data, i, j, u8(i / 2), u8(j / 2),
-                       u8(255));
-    }
+  for (int i = 0; i < 1920; i++) {
+    for (int j = 0; j < 1080; j++)
+      texture_data_set(result->state.texture, i, j, u8(i / 1920.0 * 255.0), u8(j / 1920.0 * 255.0), 255);
   }
   texture_update_data(result->texture);
 
@@ -66,26 +70,8 @@ bool application_update(struct application_t *application) {
 
   imgui_beginframe();
 
-  // Rendering here!
-  ImGui::ShowDemoWindow();
-
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
-  ImGui::Begin("Texture Test");
-
-  ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-  
-  int smallestSize = viewportPanelSize.x < viewportPanelSize.y ? viewportPanelSize.x : viewportPanelSize.y;
-
-  ImVec2 image_pos = ImVec2(
-    ImGui::GetCursorPos().x + (ImGui::GetContentRegionAvail().x - smallestSize) * 0.5,
-    ImGui::GetCursorPos().y + (ImGui::GetContentRegionAvail().y - smallestSize) * 0.5
-  );
-  ImGui::SetCursorPos(image_pos);
-
-  ImGui::Image((void*)(u64)application->texture->id, ImVec2(smallestSize, smallestSize), ImVec2(0, 1), ImVec2(1, 0));
-
-  ImGui::End();
-  ImGui::PopStyleVar();
+  imgui_draw_raytraced_texture(application);
+  imgui_draw_render_settings(application);
 
   imgui_endframe();
 
@@ -146,6 +132,51 @@ void imgui_endframe() {
     ImGui::RenderPlatformWindowsDefault();
     glfwMakeContextCurrent(backup_context);
   }
+}
+
+void imgui_draw_raytraced_texture(struct application_t *application) {
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
+  ImGui::Begin("Raytrace View");
+
+  ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+
+  float aspect = application->texture->data->width / float(application->texture->data->height);
+
+  int smallestSize = viewportPanelSize.x / aspect < viewportPanelSize.y
+                         ? viewportPanelSize.x / aspect
+                         : viewportPanelSize.y;
+
+  ImVec2 image_pos =
+      ImVec2(ImGui::GetCursorPos().x +
+                 (ImGui::GetContentRegionAvail().x - smallestSize * aspect) * 0.5,
+             ImGui::GetCursorPos().y +
+                 (ImGui::GetContentRegionAvail().y - smallestSize) * 0.5);
+  ImGui::SetCursorPos(image_pos);
+
+  ImGui::Image((void *)(u64)application->texture->id,
+               ImVec2(smallestSize * aspect, smallestSize), ImVec2(0, 1), ImVec2(1, 0));
+
+  ImGui::End();
+  ImGui::PopStyleVar();
+}
+
+void imgui_draw_render_settings(struct application_t *application) {
+  ImGui::Begin("Settings");
+
+  // Resolution input field
+  i32 resolution[2]{application->state.settings.width,
+                    application->state.settings.height};
+  ImGui::InputInt2("Resolution", resolution);
+  application->state.settings.width = resolution[0];
+  application->state.settings.height = resolution[1];
+
+  // Samples per pixel input field
+  ImGui::SliderInt("Samples Per Pixel", &application->state.settings.samples_per_pixel, 1, 1000);
+
+  // Render button
+  ImGui::Button("Render");
+
+  ImGui::End();
 }
 
 void application_destroy(struct application_t *application) {
