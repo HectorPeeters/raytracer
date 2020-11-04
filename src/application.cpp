@@ -8,6 +8,7 @@
 
 #include "log.h"
 #include "raytrace.h"
+#include "theme.h"
 
 void setup_imgui(struct window_t *window);
 void imgui_beginframe();
@@ -33,6 +34,8 @@ struct application_t *application_create() {
   texture_update_data(result->texture);
 
   setup_imgui(result->window);
+
+  theme_cherry();
 
   return result;
 }
@@ -172,6 +175,7 @@ void imgui_draw_render_settings(struct application_t *application) {
     // Resolution input field
     i32 resolution[2]{application->state.settings.width,
                       application->state.settings.height};
+
     if (ImGui::InputInt2("Resolution", resolution)) {
       if (application->state.settings.width != resolution[0] ||
           application->state.settings.height != resolution[1]) {
@@ -193,22 +197,23 @@ void imgui_draw_render_settings(struct application_t *application) {
   }
 
   {
-  // Render button
-  if (ImGui::Button("Render")) {
-    for (int i = 0; i < application->state.texture->width; i++) {
-      for (int j = 0; j < application->state.texture->height; j++) {
-        glm::vec3 result{0.0};
-        for (int s = 0; s < application->state.settings.samples_per_pixel; s++)
-          result += glm::vec3{rand() % 255, rand() % 255, rand() % 255};
+    // Render button
+    if (ImGui::Button("Render")) {
+      for (int i = 0; i < application->state.texture->width; i++) {
+        for (int j = 0; j < application->state.texture->height; j++) {
+          glm::vec3 result{0.0};
+          for (int s = 0; s < application->state.settings.samples_per_pixel;
+               s++)
+            result += glm::vec3{rand() % 255, rand() % 255, rand() % 255};
 
-        result /= application->state.settings.samples_per_pixel;
+          result /= application->state.settings.samples_per_pixel;
 
-        texture_data_set(application->state.texture, i, j, result.x, result.y,
-                         result.z);
+          texture_data_set(application->state.texture, i, j, result.x, result.y,
+                           result.z);
+        }
       }
+      texture_update_data(application->texture);
     }
-    texture_update_data(application->texture);
-  }
   }
 
   ImGui::End();
