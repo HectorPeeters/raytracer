@@ -3,6 +3,8 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <imgui.h>
+#include <stdlib.h>
+#include <glm/glm.hpp>
 
 #include "log.h"
 #include "raytrace.h"
@@ -172,8 +174,10 @@ void imgui_draw_render_settings(struct application_t *application) {
   if (ImGui::InputInt2("Resolution", resolution)) {
     if (application->state.settings.width != resolution[0] ||
         application->state.settings.height != resolution[1]) {
+
       application->state.settings.width = resolution[0];
       application->state.settings.height = resolution[1];
+
       texture_data_resize(application->state.texture, resolution[0],
                           resolution[1]);
     }
@@ -185,11 +189,17 @@ void imgui_draw_render_settings(struct application_t *application) {
 
   // Render button
   if (ImGui::Button("Render")) {
-    for (int i = 0; i < 1920; i++) {
-      for (int j = 0; j < 1080; j++)
-        texture_data_set(application->state.texture, i, j,
-                         255 - u8(i / 1920.0 * 255.0), u8(j / 1920.0 * 255.0),
-                         255);
+    for (int i = 0; i < application->state.texture->width; i++) {
+      for (int j = 0; j < application->state.texture->height; j++) {
+        glm::vec3 result{0.0};
+        for (int s = 0; s < application->state.settings.samples_per_pixel; s++)
+          result += glm::vec3{rand() % 255, rand() % 255, rand() % 255};
+
+        result /= application->state.settings.samples_per_pixel;
+
+        texture_data_set(application->state.texture, i, j, result.x, result.y,
+                         result.z);
+      }
     }
     texture_update_data(application->texture);
   }
