@@ -130,6 +130,21 @@ struct texture_t *texture_create(struct texture_data_t *data) {
   return texture;
 }
 
+void texture_resize(struct texture_t *texture, u16 width, u16 height) {
+  texture_data_resize(texture->data, width, height);
+
+  glBindTexture(GL_TEXTURE_2D, texture->id);
+
+  // determine the format based on the component count
+  u16 format = get_opengl_texture_format(texture->data->components);
+
+  // load the initial pixel values to the texture. this will be all zero but
+  // this way OpenGL knows how big our texture is which allows us to use
+  // SubImage2D later on
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->data->width, texture->data->height, 0, format,
+               GL_UNSIGNED_BYTE, texture->data->data);
+}
+
 void texture_update_data(struct texture_t *texture) {
   // bind the texture
   glBindTexture(GL_TEXTURE_2D, texture->id);

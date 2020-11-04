@@ -183,8 +183,7 @@ void imgui_draw_render_settings(struct application_t *application) {
         application->state.settings.width = resolution[0];
         application->state.settings.height = resolution[1];
 
-        texture_data_resize(application->state.texture, resolution[0],
-                            resolution[1]);
+        texture_resize(application->texture, resolution[0], resolution[1]);
       }
     }
   }
