@@ -1,7 +1,6 @@
 #include "application.h"
 #include "log.h"
-
-#include "ray.h"
+#include "serialize.h"
 
 int main() {
   struct application_t *application = application_create();

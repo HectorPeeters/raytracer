@@ -2,9 +2,9 @@
 
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
+#include <glm/glm.hpp>
 #include <imgui.h>
 #include <stdlib.h>
-#include <glm/glm.hpp>
 
 #include "log.h"
 #include "raytrace.h"
@@ -22,7 +22,7 @@ struct application_t *application_create() {
 
   result->window = window_create(1920 / 3 * 2, 1080 / 3 * 2, "Raytracer");
   result->running = 1;
-  result->state = render_state_create();
+  result->state = render_state_create("data/scene.json");
   result->texture = texture_create(result->state.texture);
 
   for (int i = 0; i < 1920; i++) {
@@ -168,25 +168,31 @@ void imgui_draw_raytraced_texture(struct application_t *application) {
 void imgui_draw_render_settings(struct application_t *application) {
   ImGui::Begin("Settings");
 
-  // Resolution input field
-  i32 resolution[2]{application->state.settings.width,
-                    application->state.settings.height};
-  if (ImGui::InputInt2("Resolution", resolution)) {
-    if (application->state.settings.width != resolution[0] ||
-        application->state.settings.height != resolution[1]) {
+  {
+    // Resolution input field
+    i32 resolution[2]{application->state.settings.width,
+                      application->state.settings.height};
+    if (ImGui::InputInt2("Resolution", resolution)) {
+      if (application->state.settings.width != resolution[0] ||
+          application->state.settings.height != resolution[1]) {
 
-      application->state.settings.width = resolution[0];
-      application->state.settings.height = resolution[1];
+        application->state.settings.width = resolution[0];
+        application->state.settings.height = resolution[1];
 
-      texture_data_resize(application->state.texture, resolution[0],
-                          resolution[1]);
+        texture_data_resize(application->state.texture, resolution[0],
+                            resolution[1]);
+      }
     }
   }
 
-  // Samples per pixel input field
-  ImGui::SliderInt("Samples Per Pixel",
-                   &application->state.settings.samples_per_pixel, 1, 1000);
+  {
+    // Samples per pixel input field
+    i32 value = application->state.settings.samples_per_pixel;
+    ImGui::SliderInt("Samples Per Pixel", &value, 1, 1000);
+    application->state.settings.samples_per_pixel = value;
+  }
 
+  {
   // Render button
   if (ImGui::Button("Render")) {
     for (int i = 0; i < application->state.texture->width; i++) {
@@ -202,6 +208,7 @@ void imgui_draw_render_settings(struct application_t *application) {
       }
     }
     texture_update_data(application->texture);
+  }
   }
 
   ImGui::End();

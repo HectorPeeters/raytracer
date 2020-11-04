@@ -21,11 +21,11 @@ project "raytracer"
     targetdir "bin/%{cfg.buildcfg}"
     objdir "obj/%{cfg.buildcfg}"
 
-    includedirs { "include/", "libs/glad/include/", "libs/glfw/include/", "libs/glm/", "libs/imgui/", "libs/imgui/examples" }
+    includedirs { "include/", "libs/glad/include/", "libs/glfw/include/", "libs/glm/", "libs/imgui/", "libs/imgui/examples", "libs/parson" }
     
     files { "src/*.cpp" }
 
-    links { "GLFW", "GLM", "GLAD", "ImGui" }
+    links { "GLFW", "GLM", "GLAD", "ImGui", "Parson" }
 
     filter "system:linux"
         links { "dl", "pthread" }
@@ -39,3 +39,4 @@ include "libs/glfw.lua"
 include "libs/glad.lua"
 include "libs/glm.lua"
 include "libs/imgui.lua"
+include "libs/parson.lua"
