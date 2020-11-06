@@ -17,3 +17,6 @@ struct render_settings_t render_settings_create(u16 width, u16 height,
                                                 u32 samples_per_pixel);
 
 struct render_state_t render_state_create(const char* scene_file);
+
+
+void render_scene(struct render_state_t* state);

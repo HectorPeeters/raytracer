@@ -198,19 +198,7 @@ void imgui_draw_render_settings(struct application_t *application) {
   {
     // Render button
     if (ImGui::Button("Render")) {
-      for (int i = 0; i < application->state.texture->width; i++) {
-        for (int j = 0; j < application->state.texture->height; j++) {
-          glm::vec3 result{0.0};
-          for (int s = 0; s < application->state.settings.samples_per_pixel;
-               s++)
-            result += glm::vec3{rand() % 255, rand() % 255, rand() % 255};
-
-          result /= application->state.settings.samples_per_pixel;
-
-          texture_data_set(application->state.texture, i, j, result.x, result.y,
-                           result.z);
-        }
-      }
+      render_scene(&application->state);
       texture_update_data(application->texture);
     }
   }
