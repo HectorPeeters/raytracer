@@ -57,8 +57,31 @@ project "Editor"
     filter "system:windows"
         defines { "_WINDOWS" }
 
+project "Tests"
+    kind "ConsoleApp"
+    language "C++"
+    architecture "x86_64"
+    
+    targetdir "bin/%{cfg.buildcfg}"
+    objdir "obj/%{cfg.buildcfg}"
+    
+    includedirs { "include/", "libs/catch2/" }
+        
+    files { "tests/*.cpp" }
+    
+    links { "Raytracer", "Catch2" }
+    
+    filter "system:linux"
+        links { "dl", "pthread" }
+    
+        defines { "_X11" }
+    
+    filter "system:windows"
+        defines { "_WINDOWS" }
+
 include "libs/glfw.lua"
 include "libs/glad.lua"
 include "libs/glm.lua"
 include "libs/imgui.lua"
 include "libs/parson.lua"
+include "libs/catch2.lua"
