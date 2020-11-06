@@ -1,4 +1,4 @@
-workspace "raytracer"
+workspace "Raytracer"
     configurations { "Debug", "Release" }
     startproject "OpenGLBoilerPlate"
 
@@ -13,7 +13,29 @@ workspace "raytracer"
         optimize "Speed"
         flags { "LinkTimeOptimization" }
 
-project "raytracer"
+project "Raytracer"
+    kind "StaticLib"
+    language "C++"
+    architecture "x86_64"
+
+    targetdir "bin/%{cfg.buildcfg}"
+    objdir "obj/%{cfg.buildcfg}"
+
+    includedirs { "include/", "libs/glm/", }
+    
+    files { "src/*.cpp" }
+
+    links { "GLM" }
+
+    filter "system:linux"
+        links { "dl", "pthread" }
+
+        defines { "_X11" }
+
+    filter "system:windows"
+        defines { "_WINDOWS" }
+
+project "Editor"
     kind "ConsoleApp"
     language "C++"
     architecture "x86_64"
@@ -21,11 +43,11 @@ project "raytracer"
     targetdir "bin/%{cfg.buildcfg}"
     objdir "obj/%{cfg.buildcfg}"
 
-    includedirs { "include/", "libs/glad/include/", "libs/glfw/include/", "libs/glm/", "libs/imgui/", "libs/imgui/examples", "libs/parson" }
+    includedirs { "editor/include/", "libs/glad/include/", "libs/glfw/include/", "libs/imgui/", "libs/imgui/examples", "libs/parson", "include/" }
     
-    files { "src/*.cpp" }
+    files { "editor/src/*.cpp" }
 
-    links { "GLFW", "GLM", "GLAD", "ImGui", "Parson" }
+    links { "GLFW", "GLAD", "ImGui", "Parson", "Raytracer" }
 
     filter "system:linux"
         links { "dl", "pthread" }

@@ -2,13 +2,14 @@
 
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
-#include <glm/glm.hpp>
 #include <imgui.h>
 #include <stdlib.h>
 
 #include "log.h"
 #include "raytrace.h"
 #include "theme.h"
+#include "opengl_texture.h"
+#include "serialization.h"
 
 void setup_imgui(struct window_t *window);
 void imgui_beginframe();
@@ -21,9 +22,11 @@ void imgui_draw_render_settings(struct application_t *application);
 struct application_t *application_create() {
   struct application_t *result = ALLOC(struct application_t);
 
+  struct render_settings_t settings = deserialize_render_settings(read_json_file("data/scene.json"));
+
   result->window = window_create(1920 / 3 * 2, 1080 / 3 * 2, "Raytracer");
   result->running = 1;
-  result->state = render_state_create("data/scene.json");
+  result->state = render_state_create(settings);
   result->texture = texture_create(result->state.texture);
 
   for (int i = 0; i < 1920; i++) {
