@@ -29,3 +29,9 @@ typedef double f64;
 #define ASSERT(x)                                                              \
   if (!(x))                                                                    \
     LERR("Assertion failed!");
+
+#define UNREACHABLE()                                                            \
+  {                                                                            \
+    LERR("Unreachable code");                                                  \
+    exit(1);                                                                   \
+  }
