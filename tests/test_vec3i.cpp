@@ -81,7 +81,7 @@ TEST_CASE("vec3i div vec3i", "[vec3i]") {
   REQUIRE(res == vec3i(0, 1, 3));
 }
 
-// vec3i f32 operations
+// vec3i i32 operations
 
 TEST_CASE("vec3i add i32", "[vec3i]") {
   vec3i a = vec3i(1, 2, 3);
@@ -141,7 +141,7 @@ TEST_CASE("vec3i div assign vec3i", "[vec3i]") {
   REQUIRE(a == vec3i(0, 1, 3));
 }
 
-// vec3i float assignment operators
+// vec3i i32 assignment operators
 
 TEST_CASE("vec3i add assign i32", "[vec3i]") {
   vec3i a = vec3i(1, 2, 3);

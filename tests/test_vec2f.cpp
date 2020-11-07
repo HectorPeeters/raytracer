@@ -151,7 +151,7 @@ TEST_CASE("vec2f div assign vec2f", "[vec2f]") {
   REQUIRE(a == vec2f(0.33333333f, 1.0f));
 }
 
-// vec2f float assignment operators
+// vec2f f32 assignment operators
 
 TEST_CASE("vec2f add assign f32", "[vec2f]") {
   vec2f a = vec2f(1.0f, 2.0f);
