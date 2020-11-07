@@ -8,7 +8,7 @@ template <typename T> class vec4 {
 public:
   inline vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
 
-  inline vec4<T> zero() { return vec4<T>(0, 0, 0, 0); }
+  static inline vec4<T> zero() { return vec4<T>(0, 0, 0, 0); }
 
   f32 length() { return sqrtf(x * x + y * y + z * z + w * w); }
 

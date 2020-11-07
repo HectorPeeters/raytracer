@@ -32,9 +32,9 @@ public:
 
   static mat4<T> translation(vec3<T> translation) {
     mat4<T> result = mat4<T>::identity();
-    result[0][3] = translation.x;
-    result[1][3] = translation.y;
-    result[2][3] = translation.z;
+    result.r0[3] = translation.x;
+    result.r1[3] = translation.y;
+    result.r2[3] = translation.z;
     return result;
   }
 
@@ -71,23 +71,23 @@ public:
 
   static mat4<T> scale(vec3<T> scale) {
     mat4<T> result = mat4<T>::identity();
-    result[0][0] = scale.x;
-    result[1][1] = scale.y;
-    result[2][2] = scale.y;
+    result.r0[0] = scale.x;
+    result.r1[1] = scale.y;
+    result.r2[2] = scale.z;
     return result;
   }
 
   static mat4<T> orthographic(T left, T right, T top, T bottom, T near, T far) {
     mat4<T> result = mat4<T>::identity();
 
-    result[0][0] = 2 / (right - left);
-    result[0][3] = -(right + left) / (right - left);
+    result.r0[0] = 2 / (right - left);
+    result.r1[3] = -(right + left) / (right - left);
 
-    result[1][1] = 2 / (top - bottom);
-    result[1][3] = -(top + bottom) / (top - bottom);
+    result.r1[1] = 2 / (top - bottom);
+    result.r1[3] = -(top + bottom) / (top - bottom);
 
-    result[2][2] = -2 / (near - far);
-    result[2][3] = -(far + near) / (far - near);
+    result.r2[2] = -2 / (near - far);
+    result.r2[3] = -(far + near) / (far - near);
 
     return result;
   }
@@ -97,11 +97,11 @@ public:
 
     T tan_half_fov = tan(fov / 2);
 
-    result[0][0] = 1 / (aspect * tan_half_fov);
-    result[1][1] = 1 / tan_half_fov;
-    result[2][2] = -(far + near) / (far - near);
-    result[2][3] = -(2 * far * near) / (far - near);
-    result[3][2] = -1;
+    result.r0[0] = 1 / (aspect * tan_half_fov);
+    result.r1[1] = 1 / tan_half_fov;
+    result.r2[2] = -(far + near) / (far - near);
+    result.r2[3] = -(2 * far * near) / (far - near);
+    result.r3[2] = -1;
 
     return result;
   }
@@ -135,35 +135,35 @@ public:
     T t16 = r1[0] * r2[2] - r2[0] * r1[2];
     T t17 = r1[0] * r2[1] - r2[0] * r1[1];
 
-    vec4<T> r0{
+    vec4<T> res_r0{
         r1[1] * t00 - r1[2] * t01 + r1[3] * t02,
         -(r0[1] * t00 - r0[2] * t01 + r0[3] * t02),
         r0[1] * t06 - r0[2] * t07 + r0[3] * t08,
         -(r0[1] * t12 - r0[2] * t13 + r0[3] * t14),
     };
 
-    vec4<T> r1{
-        r1[0] * t00 - r1[2] * t03 + r1[3] * t04,
-        -(r0[0] * t00 - r0[2] * t03 + r0[3] * t04),
-        r0[0] * t06 - r0[2] * t09 + r0[3] * t10,
-        -(r0[0] * t12 - r0[2] * t15 + r0[3] * t16),
+    vec4<T> res_r1{
+        -(r1[0] * t00 - r1[2] * t03 + r1[3] * t04),
+        r0[0] * t00 - r0[2] * t03 + r0[3] * t04,
+        -(r0[0] * t06 - r0[2] * t09 + r0[3] * t10),
+        r0[0] * t12 - r0[2] * t15 + r0[3] * t16,
     };
 
-    vec4<T> r2{
+    vec4<T> res_r2{
         r1[0] * t01 - r1[1] * t03 + r1[3] * t05,
         -(r0[0] * t01 - r0[1] * t03 + r0[3] * t05),
         r0[0] * t07 - r0[1] * t09 + r0[3] * t11,
         -(r0[0] * t13 - r0[1] * t15 + r0[3] * t17),
     };
 
-    vec4<T> r3{
-        r1[0] * t02 - r1[1] * t04 + r1[2] * t05,
-        -(r0[0] * t02 - r0[1] * t04 + r0[2] * t05),
-        r0[0] * t08 - r0[1] * t10 + r0[2] * t11,
-        -(r0[0] * t14 - r0[1] * t16 + r0[2] * t17),
+    vec4<T> res_r3{
+        -(r1[0] * t02 - r1[1] * t04 + r1[2] * t05),
+        r0[0] * t02 - r0[1] * t04 + r0[2] * t05,
+        -(r0[0] * t08 - r0[1] * t10 + r0[2] * t11),
+        r0[0] * t14 - r0[1] * t16 + r0[2] * t17,
     };
 
-    return {r0, r1, r2, r3};
+    return {res_r0, res_r1, res_r2, res_r3};
   }
 
   mat4<T> inverse() {
