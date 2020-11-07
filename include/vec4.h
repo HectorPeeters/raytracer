@@ -1,7 +1,8 @@
 #pragma once
 
-#include "core.h"
+#include <cmath>
 
+#include "core.h"
 
 template <typename T> class vec4 {
 public:

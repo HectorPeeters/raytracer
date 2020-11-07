@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 #include "core.h"
 
 template <typename T> class vec2 {
