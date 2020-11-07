@@ -1,5 +1,6 @@
 #pragma once
 
+#include "mat4.h"
 #include "vec3.h"
 
 struct transform_t {
@@ -7,8 +8,8 @@ struct transform_t {
   vec3f rotation;
   vec3f scale;
 
-  // glm::mat4 matrix;
-  // glm::mat4 inv_matrix;
+  mat4f matrix;
+  mat4f inv_matrix;
 };
 
 void transform_update_matrices(struct transform_t *transform);
