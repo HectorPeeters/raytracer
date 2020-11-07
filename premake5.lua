@@ -21,11 +21,9 @@ project "Raytracer"
     targetdir "bin/%{cfg.buildcfg}"
     objdir "obj/%{cfg.buildcfg}"
 
-    includedirs { "include/", "libs/glm/", }
+    includedirs { "include/" }
     
     files { "src/*.cpp" }
-
-    links { "GLM" }
 
     filter "system:linux"
         links { "dl", "pthread" }
@@ -81,7 +79,6 @@ project "Tests"
 
 include "libs/glfw.lua"
 include "libs/glad.lua"
-include "libs/glm.lua"
 include "libs/imgui.lua"
 include "libs/parson.lua"
 include "libs/catch2.lua"

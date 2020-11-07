@@ -1,6 +1,6 @@
 #include "raytrace.h"
 
-#include <glm/glm.hpp>
+#include "vec3.h"
 
 struct render_settings_t render_settings_create(u16 width, u16 height,
                                                 u32 samples_per_pixel) {
@@ -19,11 +19,11 @@ void render_scene(struct render_state_t *state) {
     for (int j = 0; j < state->texture->height; j++) {
 
       // the final color of the pixel
-      glm::vec3 result{0.0};
+      vec3f result(0.0f, 0.0f, 0.0f);
 
       // loop for each sample of this pixel
       for (int s = 0; s < state->settings.samples_per_pixel; s++)
-        result += glm::vec3{rand() % 255, rand() % 255, rand() % 255};
+        result += vec3f(rand() % 255, rand() % 255, rand() % 255);
 
       // average all samples
       result /= state->settings.samples_per_pixel;

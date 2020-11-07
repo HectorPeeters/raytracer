@@ -1,14 +1,13 @@
 #pragma once
 
-#include <glm/glm.hpp>
-
+#include "vec3.h"
 #include "core.h"
 
 struct ray_t {
-  glm::vec3 origin;
-  glm::vec3 direction;
+  vec3f origin;
+  vec3f direction;
 
   float max_t;
 };
 
-static inline glm::vec3 ray_at(struct ray_t *ray, float t);
+static inline vec3f ray_at(struct ray_t *ray, float t);
