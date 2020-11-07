@@ -31,8 +31,16 @@ public:
     y *= one_over_length;
   }
 
-  T dot(const vec2<T> &other) {
-    return x * other.x + y * other.y;
+  T dot(const vec2<T> &other) { return x * other.x + y * other.y; }
+
+  T &operator[](int index) {
+    if (index == 0) {
+      return x;
+    } else if (index == 1) {
+      return y;
+    } else {
+      UNREACHABLE();
+    }
   }
 
   vec2<T> operator+(const vec2<T> &right) {

@@ -41,6 +41,14 @@ TEST_CASE("vec3i cross", "[vec3i]") {
   REQUIRE(c.dot(a) == 0);
 }
 
+TEST_CASE("vec3i index accessor", "[vec3f]}") {
+  vec3i vec = vec3i(1, 2, 3);
+
+  REQUIRE(APPROX_EQ(vec[0], 1));
+  REQUIRE(APPROX_EQ(vec[1], 2));
+  REQUIRE(APPROX_EQ(vec[2], 3));
+}
+
 TEST_CASE("vec3i equals operator", "[vec3i]") {
   vec3i a = vec3i(2, -4, 3);
   vec3i b = vec3i(2, -4, 3);

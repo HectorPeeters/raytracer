@@ -66,6 +66,14 @@ TEST_CASE("vec3f cross", "[vec3f]") {
   REQUIRE(APPROX_EQ(c.dot(a), 0.0f));
 }
 
+TEST_CASE("vec3f index accessor", "[vec3f]}") {
+  vec3f vec = vec3f(1.0f, 2.0f, 3.0f);
+
+  REQUIRE(APPROX_EQ(vec[0], 1.0f));
+  REQUIRE(APPROX_EQ(vec[1], 2.0f));
+  REQUIRE(APPROX_EQ(vec[2], 3.0f));
+}
+
 TEST_CASE("vec3f equals operator", "[vec3f]") {
   vec3f a = vec3f(1.4f, -5.7f, 3.0f);
   vec3f b = vec3f(1.4f, -5.7f, 3.0f);

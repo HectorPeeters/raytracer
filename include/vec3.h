@@ -38,6 +38,18 @@ public:
     return x * other.x + y * other.y + z * other.z;
   }
 
+  T &operator[](int index) {
+    if (index == 0) {
+      return x;
+    } else if (index == 1) {
+      return y;
+    } else if (index == 2) {
+      return z;
+    } else {
+      UNREACHABLE();
+    }
+  }
+
   vec3<T> cross(const vec3<T> &other) {
     return vec3<T>{
         y * other.z - other.y * z,

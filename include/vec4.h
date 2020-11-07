@@ -40,12 +40,26 @@ public:
     return x * other.x + y * other.y + z * other.z + w * other.w;
   }
 
+  T &operator[](int index) {
+    if (index == 0) {
+      return x;
+    } else if (index == 1) {
+      return y;
+    } else if (index == 2) {
+      return z;
+    } else if (index == 3) {
+      return w;
+    } else {
+      UNREACHABLE();
+    }
+  }
+
   vec4<T> operator+(const vec4<T> &right) {
     return vec4<T>{
         x + right.x,
         y + right.y,
         z + right.z,
-        w + right.w
+        w + right.w,
     };
   }
 

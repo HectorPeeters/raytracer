@@ -30,6 +30,13 @@ TEST_CASE("vec2i dot", "[vec2i]") {
   REQUIRE(b.dot(c) == 2);
 }
 
+TEST_CASE("vec2i index accessor", "[vec2i]}") {
+  vec2i vec = vec2i(1, 2);
+
+  REQUIRE(APPROX_EQ(vec[0], 1));
+  REQUIRE(APPROX_EQ(vec[1], 2));
+}
+
 TEST_CASE("vec2i equals operator", "[vec2i]") {
   vec2i a = vec2i(2, -4);
   vec2i b = vec2i(2, -4);
