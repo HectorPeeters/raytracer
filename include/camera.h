@@ -21,7 +21,7 @@ private:
 
   f32 aspect_ratio;
 
-  f32 focal_length;
+  f32 focal_length{1.0f};
 
   vec3f horizontal;
   vec3f vertical;
