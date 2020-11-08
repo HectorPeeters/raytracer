@@ -127,7 +127,7 @@ void render_state::render_scene() {
   buffer.clear(vec4f(0.3));
   job_index = 0;
 
-  for (u8 i = 0; i < 16; i++) {
+  for (u8 i = 0; i < settings.thread_count; i++) {
     thread<render_state> render_thread(run_render_thread);
     render_thread.start(this);
   }

@@ -13,7 +13,7 @@
 
 application::application()
     : editor_window(window(1920 / 3 * 2, 1080 / 3 * 2, "Raytracer")),
-      running(true), state(render_state(render_settings_create(1920, 1080, 1),
+      running(true), state(render_state(render_settings_t{},
                                         camera(transform(), 70.0f, 0.1f, 100.0f,
                                                1920.0f / 1080.0f))),
       texture(opengl_texture<f32>(&state.buffer)) {}
@@ -198,9 +198,16 @@ void application::imgui_draw_render_settings() {
 
   {
     // Samples per pixel input field
-    i32 value = state.settings.samples_per_pixel;
-    ImGui::SliderInt("Samples Per Pixel", &value, 1, 1000);
-    state.settings.samples_per_pixel = value;
+    i32 samples = state.settings.samples_per_pixel;
+    ImGui::SliderInt("Samples Per Pixel", &samples, 1, 1000);
+    state.settings.samples_per_pixel = samples;
+  }
+
+  {
+    // Amount of threads to use for rendering
+    i32 threads = state.settings.thread_count;
+    ImGui::SliderInt("Threads", &threads, 1, 16);
+    state.settings.thread_count = threads;
   }
 
   {

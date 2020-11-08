@@ -4,10 +4,8 @@
 #include "texture.h"
 
 struct render_settings_t {
-  u16 width;
-  u16 height;
-  u32 samples_per_pixel;
+  u16 width{1920};
+  u16 height{1080};
+  u32 samples_per_pixel{20};
+  u8 thread_count{16};
 };
-
-struct render_settings_t render_settings_create(u16 width, u16 height,
-                                                u32 samples_per_pixel);

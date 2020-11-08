@@ -17,6 +17,7 @@ struct render_settings_t deserialize_render_settings(JSON_Object *root) {
   u16 width = READ_NUMBER(settings_value, "width", u16);
   u16 height = READ_NUMBER(settings_value, "height", u16);
   u32 samples_per_pixel = READ_NUMBER(settings_value, "samples_per_pixel", u32);
+  u8 threads = READ_NUMBER(settings_value, "threads", u8);
 
-  return render_settings_create(width, height, samples_per_pixel);
+  return render_settings_t{width, height, samples_per_pixel, threads};
 }
