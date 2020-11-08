@@ -4,6 +4,7 @@
 #include "opengl_texture.h"
 #include "raytrace.h"
 #include "window.h"
+#include "render_state.h"
 
 class application {
 public:
@@ -26,7 +27,7 @@ private:
 
 private:
   bool running;
-  struct render_state_t state;
+  render_state state;
   opengl_texture<f32> texture;
   window editor_window;
 };

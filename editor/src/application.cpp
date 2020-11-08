@@ -13,22 +13,21 @@
 
 application::application()
     : editor_window(window(1920 / 3 * 2, 1080 / 3 * 2, "Raytracer")),
-      running(true),
-      state(render_state_create(
-          render_settings_create(1920, 1080, 1),
-          camera(transform_default(), 70.0f, 0.1f, 100.0f, 1920.0f / 1080.0f))),
-      texture(opengl_texture<f32>(&state.buffer)){}
+      running(true), state(render_state(render_settings_create(1920, 1080, 1),
+                                        camera(transform_default(), 70.0f, 0.1f,
+                                               100.0f, 1920.0f / 1080.0f))),
+      texture(opengl_texture<f32>(state.get_buffer())) {}
 
 void application::init() {
   editor_window.init();
 
   texture.init();
 
-  for (int i = 0; i < state.buffer.width; i++) {
-    for (int j = 0; j < state.buffer.height; j++) {
+  for (int i = 0; i < state.settings.width; i++) {
+    for (int j = 0; j < state.settings.height; j++) {
       state.buffer.set(i, j,
-                       vec4f(i / (f32)state.buffer.width,
-                             j / (f32)state.buffer.height, 1.0f, 1.0f));
+                       vec4f(i / (f32)state.settings.width,
+                             j / (f32)state.settings.height, 1.0f, 1.0f));
     }
   }
 
@@ -188,6 +187,7 @@ void application::imgui_draw_render_settings() {
         state.settings.height = resolution[1];
 
         texture.resize(resolution[0], resolution[1]);
+        state.resize(resolution[0], resolution[1]);
       }
     }
   }
@@ -202,7 +202,7 @@ void application::imgui_draw_render_settings() {
   {
     // Render button
     if (ImGui::Button("Render")) {
-      render_scene(&state);
+      state.render_scene();
       texture.update_contents();
     }
   }
