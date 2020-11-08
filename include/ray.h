@@ -1,7 +1,8 @@
 #pragma once
 
-#include "math/vec3.h"
 #include "core.h"
+#include "math/mat4.h"
+#include "math/vec3.h"
 
 struct ray_t {
   vec3f origin;
@@ -10,4 +11,6 @@ struct ray_t {
   f32 max_t;
 };
 
-static inline vec3f ray_at(struct ray_t *ray, float t);
+inline vec3f ray_at(struct ray_t *ray, float t);
+
+ray_t ray_transform(const ray_t &ray, const mat4f &matrix);
