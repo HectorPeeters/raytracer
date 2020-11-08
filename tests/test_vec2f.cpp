@@ -3,8 +3,30 @@
 #include "core.h"
 #include "math/vec2.h"
 
+TEST_CASE("vec2f empty constructor", "[vec2f]") {
+  vec2f vec = vec2f();
+
+  REQUIRE(APPROX_EQ(vec.x, 0.0f));
+  REQUIRE(APPROX_EQ(vec.y, 0.0f));
+}
+
+TEST_CASE("vec2f single value constructor", "[vec2f]") {
+  vec2f vec = vec2f(2.0f);
+
+  REQUIRE(APPROX_EQ(vec.x, 2.0f));
+  REQUIRE(APPROX_EQ(vec.y, 2.0f));
+}
+
 TEST_CASE("vec2f constructor sets all fields", "[vec2f]") {
   vec2f vec = vec2f(1.0f, 2.0f);
+
+  REQUIRE(APPROX_EQ(vec.x, 1.0f));
+  REQUIRE(APPROX_EQ(vec.y, 2.0f));
+}
+
+TEST_CASE("vec2f copy constructor", "[vec2f]") {
+  vec2f a = vec2f(1.0f, 2.0f);
+  vec2f vec(a);
 
   REQUIRE(APPROX_EQ(vec.x, 1.0f));
   REQUIRE(APPROX_EQ(vec.y, 2.0f));

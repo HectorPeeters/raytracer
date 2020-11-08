@@ -2,6 +2,20 @@
 
 #include "math/vec2.h"
 
+TEST_CASE("vec2i empty constructor", "[vec2i]") {
+  vec2i vec = vec2i();
+
+  REQUIRE(APPROX_EQ(vec.x, 0));
+  REQUIRE(APPROX_EQ(vec.y, 0));
+}
+
+TEST_CASE("vec2i single value constructor", "[vec2i]") {
+  vec2i vec = vec2i(2);
+
+  REQUIRE(APPROX_EQ(vec.x, 2));
+  REQUIRE(APPROX_EQ(vec.y, 2));
+}
+
 TEST_CASE("vec2i constructor sets all fields", "[vec2i]") {
   vec2i vec = vec2i(1, 2);
 
@@ -9,9 +23,12 @@ TEST_CASE("vec2i constructor sets all fields", "[vec2i]") {
   REQUIRE(vec.y == 2);
 }
 
-TEST_CASE("vec2i length", "[vec2i]") {
-  vec2i vec = vec2i(1, 2);
-  REQUIRE(APPROX_EQ(vec.length(), 2.236068f));
+TEST_CASE("vec2i copy constructor", "[vec2i]") {
+  vec2i a = vec2i(1, 2);
+  vec2i vec(a);
+
+  REQUIRE(APPROX_EQ(vec.x, 1));
+  REQUIRE(APPROX_EQ(vec.y, 2));
 }
 
 TEST_CASE("vec2i length_sqrt", "[vec2i]") {

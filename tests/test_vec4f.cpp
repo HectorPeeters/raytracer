@@ -3,8 +3,36 @@
 #include "core.h"
 #include "math/vec4.h"
 
+TEST_CASE("vec4f empty constructor", "[vec4f]") {
+  vec4f vec = vec4f();
+
+  REQUIRE(APPROX_EQ(vec.x, 0.0f));
+  REQUIRE(APPROX_EQ(vec.y, 0.0f));
+  REQUIRE(APPROX_EQ(vec.z, 0.0f));
+  REQUIRE(APPROX_EQ(vec.w, 0.0f));
+}
+
+TEST_CASE("vec4f single value constructor", "[vec4f]") {
+  vec4f vec = vec4f(2.0f);
+
+  REQUIRE(APPROX_EQ(vec.x, 2.0f));
+  REQUIRE(APPROX_EQ(vec.y, 2.0f));
+  REQUIRE(APPROX_EQ(vec.z, 2.0f));
+  REQUIRE(APPROX_EQ(vec.w, 2.0f));
+}
+
 TEST_CASE("vec4f constructor sets all fields", "[vec4f]") {
   vec4f vec = vec4f(1.0f, 2.0f, 3.0f, 4.0);
+
+  REQUIRE(APPROX_EQ(vec.x, 1.0f));
+  REQUIRE(APPROX_EQ(vec.y, 2.0f));
+  REQUIRE(APPROX_EQ(vec.z, 3.0f));
+  REQUIRE(APPROX_EQ(vec.w, 4.0f));
+}
+
+TEST_CASE("vec4f copy constructor", "[vec4f]") {
+  vec4f a = vec4f(1.0f, 2.0f, 3.0f, 4.0f);
+  vec4f vec(a);
 
   REQUIRE(APPROX_EQ(vec.x, 1.0f));
   REQUIRE(APPROX_EQ(vec.y, 2.0f));

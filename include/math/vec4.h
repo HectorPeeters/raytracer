@@ -6,7 +6,10 @@
 
 template <typename T> class vec4 {
 public:
+  inline vec4() : x(0), y(0), z(0), w(0) {}
+  inline vec4(T value) : x(value), y(value), z(value), w(value) {}
   inline vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
+  inline vec4(const vec4<T>& vec) : x(vec.x), y(vec.y), z(vec.z), w(vec.w){}
 
   static inline vec4<T> zero() { return vec4<T>(0, 0, 0, 0); }
 

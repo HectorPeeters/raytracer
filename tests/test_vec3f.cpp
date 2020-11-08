@@ -3,8 +3,33 @@
 #include "core.h"
 #include "math/vec3.h"
 
+TEST_CASE("vec3f empty constructor", "[vec3f]") {
+  vec3f vec = vec3f();
+
+  REQUIRE(APPROX_EQ(vec.x, 0.0f));
+  REQUIRE(APPROX_EQ(vec.y, 0.0f));
+  REQUIRE(APPROX_EQ(vec.z, 0.0f));
+}
+
+TEST_CASE("vec3f single value constructor", "[vec3f]") {
+  vec3f vec = vec3f(2.0f);
+
+  REQUIRE(APPROX_EQ(vec.x, 2.0f));
+  REQUIRE(APPROX_EQ(vec.y, 2.0f));
+  REQUIRE(APPROX_EQ(vec.z, 2.0f));
+}
+
 TEST_CASE("vec3f constructor sets all fields", "[vec3f]") {
   vec3f vec = vec3f(1.0f, 2.0f, 3.0f);
+
+  REQUIRE(APPROX_EQ(vec.x, 1.0f));
+  REQUIRE(APPROX_EQ(vec.y, 2.0f));
+  REQUIRE(APPROX_EQ(vec.z, 3.0f));
+}
+
+TEST_CASE("vec3f copy constructor", "[vec3f]") {
+  vec3f a = vec3f(1.0f, 2.0f, 3.0f);
+  vec3f vec(a);
 
   REQUIRE(APPROX_EQ(vec.x, 1.0f));
   REQUIRE(APPROX_EQ(vec.y, 2.0f));

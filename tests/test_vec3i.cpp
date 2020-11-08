@@ -2,12 +2,37 @@
 
 #include "math/vec3.h"
 
+TEST_CASE("vec3i empty constructor", "[vec3i]") {
+  vec3i vec = vec3i();
+
+  REQUIRE(APPROX_EQ(vec.x, 0));
+  REQUIRE(APPROX_EQ(vec.y, 0));
+  REQUIRE(APPROX_EQ(vec.z, 0));
+}
+
+TEST_CASE("vec3i single value constructor", "[vec3i]") {
+  vec3i vec = vec3i(2);
+
+  REQUIRE(APPROX_EQ(vec.x, 2));
+  REQUIRE(APPROX_EQ(vec.y, 2));
+  REQUIRE(APPROX_EQ(vec.z, 2));
+}
+
 TEST_CASE("vec3i constructor sets all fields", "[vec3i]") {
   vec3i vec = vec3i(1, 2, 3);
 
   REQUIRE(vec.x == 1);
   REQUIRE(vec.y == 2);
   REQUIRE(vec.z == 3);
+}
+
+TEST_CASE("vec3i copy constructor", "[vec3i]") {
+  vec3i a = vec3i(1, 2, 3);
+  vec3i vec(a);
+
+  REQUIRE(APPROX_EQ(vec.x, 1));
+  REQUIRE(APPROX_EQ(vec.y, 2));
+  REQUIRE(APPROX_EQ(vec.z, 3));
 }
 
 TEST_CASE("vec3i length", "[vec3i]") {

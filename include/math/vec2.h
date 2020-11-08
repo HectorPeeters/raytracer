@@ -6,7 +6,11 @@
 
 template <typename T> class vec2 {
 public:
+  inline vec2() : x(0), y(0) {}
+  inline vec2(T value) : x(value), y(value) {}
   inline vec2(T x, T y) : x(x), y(y) {}
+  inline vec2(const vec2<T> &vec) : x(vec.x), y(vec.y) {}
+
   ~vec2() {}
 
   f32 length() { return sqrtf(x * x + y * y); }
