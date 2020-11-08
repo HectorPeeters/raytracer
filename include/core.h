@@ -20,6 +20,7 @@ typedef double f64;
 
 #define EPSILON 0.00001f
 #define F32_MAX std::numeric_limits<f32>::max()
+#define U64_MAX 18446744073709551615
 
 #define APPROX_EQ(X, Y) abs(X - Y) < EPSILON
 

@@ -2,6 +2,7 @@
 
 #include "sphere.h"
 #include "thread.h"
+#include "sampler.h"
 
 #include <algorithm>
 
@@ -74,7 +75,7 @@ void render_state::resize(u16 width, u16 height) {
   populate_jobs_queue();
 }
 
-static void render_single_job(render_state *state, render_job job) {
+static void render_single_job(render_state *state, render_job job, sampler<f32>& sampler) {
   sphere sphere(transform(vec3f(0.0f, 0.0f, -2.0f), vec3f(0.0f, 0.0f, 0.0f),
                           vec3f(1.0f, 1.0f, 1.0f)));
   sphere.object_transform.update_matrices();
@@ -87,8 +88,8 @@ static void render_single_job(render_state *state, render_job job) {
 
       // loop for each sample of this pixel
       for (int s = 0; s < state->settings.samples_per_pixel; s++) {
-        f32 u = (i + (rand() / (f32)RAND_MAX)) / (f32)state->buffer.width;
-        f32 v = (j + (rand() / (f32)RAND_MAX)) / (f32)state->buffer.height;
+        f32 u = (i + sampler.next()) / (f32)state->buffer.width;
+        f32 v = (j + sampler.next()) / (f32)state->buffer.height;
 
         ray_t camera_ray = state->render_camera.get_ray(u, v);
 
@@ -115,9 +116,10 @@ static void render_single_job(render_state *state, render_job job) {
 }
 
 static void run_render_thread(render_state *state) {
+  xorshift_sampler sampler;
   while (!state->jobs_finished()) {
     render_job job = state->get_next_job();
-    render_single_job(state, job);
+    render_single_job(state, job, sampler);
   }
 }
 
