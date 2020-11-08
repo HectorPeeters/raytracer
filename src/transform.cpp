@@ -1,15 +1,14 @@
 #include "transform.h"
 
-transform_t transform_default() {
-  return transform_t{
-      vec3f(), vec3f(), vec3f(1.0f), mat4f::identity(), mat4f::identity(),
-  };
-}
+transform::transform() {}
+transform::transform(vec3f position) : position(position) {}
+transform::transform(vec3f position, vec3f rotation, vec3f scale)
+    : position(position), rotation(rotation), scale(scale) {}
 
-void transform_update_matrices(struct transform_t *transform) {
-  mat4f translated = mat4f::translation(transform->position);
-  mat4f rotated = mat4f::rotation_euler(transform->rotation);
-  mat4f scaled = mat4f::scale(transform->scale);
-  transform->matrix = translated * rotated * scaled;
-  transform->inv_matrix = transform->matrix.inverse();
+void transform::update_matrices() {
+  mat4f translated = mat4f::translation(position);
+  mat4f rotated = mat4f::rotation_euler(rotation);
+  mat4f scaled = mat4f::scale(scale);
+  matrix = translated * rotated * scaled;
+  inv_matrix = matrix.inverse();
 }

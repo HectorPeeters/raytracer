@@ -6,14 +6,14 @@
 
 class camera {
 public:
-  camera(struct transform_t transform, f32 fov, f32 near, f32 far, f32 aspect);
+  camera(transform camera_transform, f32 fov, f32 near, f32 far, f32 aspect);
 
   void resize(u16 width, u16 height);
 
   struct ray_t get_ray(f32 u, f32 v);
 
 private:
-  struct transform_t transform;
+  transform camera_transform;
   f32 fov;
 
   f32 near;

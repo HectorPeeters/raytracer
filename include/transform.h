@@ -3,15 +3,19 @@
 #include "math/mat4.h"
 #include "math/vec3.h"
 
-struct transform_t {
-  vec3f position;
-  vec3f rotation;
-  vec3f scale;
+class transform {
+public:
+  transform();
+  transform(vec3f position);
+  transform(vec3f position, vec3f rotation, vec3f scale);
+
+  void update_matrices();
+
+public:
+  vec3f position{0.0f};
+  vec3f rotation{0.0f};
+  vec3f scale{1.0f};
 
   mat4f matrix;
   mat4f inv_matrix;
 };
-
-transform_t transform_default();
-
-void transform_update_matrices(struct transform_t *transform);

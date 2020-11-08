@@ -14,7 +14,7 @@
 application::application()
     : editor_window(window(1920 / 3 * 2, 1080 / 3 * 2, "Raytracer")),
       running(true), state(render_state(render_settings_create(1920, 1080, 1),
-                                        camera(transform_default(), 70.0f, 0.1f,
+                                        camera(transform(), 70.0f, 0.1f,
                                                100.0f, 1920.0f / 1080.0f))),
       texture(opengl_texture<f32>(state.get_buffer())) {}
 

@@ -1,8 +1,8 @@
 #include "camera.h"
 
-camera::camera(struct transform_t transform, f32 fov, f32 near, f32 far,
+camera::camera(transform camera_transform, f32 fov, f32 near, f32 far,
                f32 aspect)
-    : transform(transform), fov(fov), near(near), far(far),
+    : camera_transform(camera_transform), fov(fov), near(near), far(far),
       aspect_ratio(aspect) {
   horizontal = vec3f(2.0f, 0.0f, 0.0f);
   vertical = vec3f(0.0f, 2.0f * aspect_ratio, 0.0f);
