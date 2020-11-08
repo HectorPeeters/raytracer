@@ -12,4 +12,6 @@ struct transform_t {
   mat4f inv_matrix;
 };
 
+transform_t transform_default();
+
 void transform_update_matrices(struct transform_t *transform);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <limits>
 #include <stdlib.h>
 
 #include "log.h"
@@ -18,6 +19,7 @@ typedef float f32;
 typedef double f64;
 
 #define EPSILON 0.00001f
+#define F32_MAX std::numeric_limits<f32>::max()
 
 #define APPROX_EQ(X, Y) abs(X - Y) < EPSILON
 
@@ -30,7 +32,7 @@ typedef double f64;
   if (!(x))                                                                    \
     LERR("Assertion failed!");
 
-#define UNREACHABLE()                                                            \
+#define UNREACHABLE()                                                          \
   {                                                                            \
     LERR("Unreachable code");                                                  \
     exit(1);                                                                   \

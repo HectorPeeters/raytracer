@@ -7,7 +7,7 @@ struct ray_t {
   vec3f origin;
   vec3f direction;
 
-  float max_t;
+  f32 max_t;
 };
 
 static inline vec3f ray_at(struct ray_t *ray, float t);

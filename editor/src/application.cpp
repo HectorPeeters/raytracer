@@ -14,13 +14,15 @@
 application::application()
     : editor_window(window(1920 / 3 * 2, 1080 / 3 * 2, "Raytracer")),
       running(true),
-      state(render_state_create(render_settings_create(1920, 1080, 1))),
-      texture(opengl_texture<f32>(&state.buffer)) {}
+      state(render_state_create(
+          render_settings_create(1920, 1080, 1),
+          camera(transform_default(), 70.0f, 0.1f, 100.0f, 1920.0f / 1080.0f))),
+      texture(opengl_texture<f32>(&state.buffer)){}
 
 void application::init() {
   editor_window.init();
 
-texture.init();
+  texture.init();
 
   for (int i = 0; i < state.buffer.width; i++) {
     for (int j = 0; j < state.buffer.height; j++) {
