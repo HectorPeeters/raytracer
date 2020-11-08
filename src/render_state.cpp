@@ -21,20 +21,21 @@ void render_state::resize(u16 width, u16 height) {
 }
 
 void render_state::render_scene() {
-  sphere sphere(transform(vec3f(0.0f, 0.0f, -2.0f)));
+  sphere sphere(transform(vec3f(0.0f, 0.0f, -2.0f), vec3f(0.0f, 0.0f, 0.0f),
+                          vec3f(1.0f, 1.0f, 1.0f)));
   sphere.object_transform.update_matrices();
 
   // loop over each pixel in the scene
   for (int i = 0; i < buffer.width; i++) {
     for (int j = 0; j < buffer.height; j++) {
-      f32 u = i / (f32)buffer.width;
-      f32 v = j / (f32)buffer.height;
-
       // the final color of the pixel
       vec4f result(0.0f);
 
       // loop for each sample of this pixel
       for (int s = 0; s < settings.samples_per_pixel; s++) {
+        f32 u = (i + (rand() / (f32)RAND_MAX)) / (f32)buffer.width;
+        f32 v = (j + (rand() / (f32)RAND_MAX)) / (f32)buffer.height;
+
         ray_t camera_ray = render_camera.get_ray(u, v);
 
         bool hit = sphere.intersect(camera_ray);
