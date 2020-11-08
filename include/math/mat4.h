@@ -8,6 +8,7 @@
 
 template <typename T> class mat4 {
 public:
+  inline mat4()  {}
   inline mat4(vec4<T> r0, vec4<T> r1, vec4<T> r2, vec4<T> r3)
       : r0(r0), r1(r1), r2(r2), r3(r3) {}
   ~mat4() {}
