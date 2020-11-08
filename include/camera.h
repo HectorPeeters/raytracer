@@ -5,5 +5,7 @@
 
 struct camera_t {
   struct transform_t transform;
-  f32 near_plane;
+  f32 fov;
+  f32 near;
+  f32 far;
 };

@@ -2,16 +2,14 @@
 #include "log.h"
 
 int main() {
-  struct application_t *application = application_create();
+  application app;
 
   LINFO("Startup complete");
 
-  while (application_update(application)) {
+  while (app.update()) {
   }
 
   LINFO("Shutting down...");
-
-  application_destroy(application);
 
   return 0;
 }

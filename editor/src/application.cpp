@@ -6,44 +6,53 @@
 #include <stdlib.h>
 
 #include "log.h"
-#include "raytrace.h"
-#include "theme.h"
 #include "opengl_texture.h"
+#include "raytrace.h"
 #include "serialization.h"
+#include "theme.h"
 
-void setup_imgui(struct window_t *window);
-void imgui_beginframe();
-void imgui_endframe();
+application::application()
+    : window(window_create(1920 / 3 * 2, 1080 / 3 * 2, "Raytracer")),
+      running(true),
+      state(render_state_create(render_settings_create(1920, 1080, 1))),
+      texture(opengl_texture<f32>(&state.buffer)) {
 
-void imgui_draw_raytraced_texture(struct application_t *application);
-
-void imgui_draw_render_settings(struct application_t *application);
-
-struct application_t *application_create() {
-  struct application_t *result = ALLOC(struct application_t);
-
-  struct render_settings_t settings = deserialize_render_settings(read_json_file("data/scene.json"));
-
-  result->window = window_create(1920 / 3 * 2, 1080 / 3 * 2, "Raytracer");
-  result->running = 1;
-  result->state = render_state_create(settings);
-  result->texture = texture_create(result->state.texture);
-
-  for (int i = 0; i < 1920; i++) {
-    for (int j = 0; j < 1080; j++)
-      texture_data_set(result->state.texture, i, j, u8(i / 1920.0 * 255.0),
-                       u8(j / 1920.0 * 255.0), 255);
+  for (int i = 0; i < state.buffer.width; i++) {
+    for (int j = 0; j < state.buffer.height; j++)
+      state.buffer.set(i, j,
+                       vec4f(i / (f32)state.buffer.width,
+                             j / (f32)state.buffer.height, 1.0f, 1.0f));
   }
-  texture_update_data(result->texture);
-
-  setup_imgui(result->window);
+  texture.update_contents();
 
   theme_cherry();
-
-  return result;
 }
 
-void setup_imgui(struct window_t *window) {
+application::~application() {
+  ImGui::DestroyContext();
+
+  window_destroy(window);
+}
+
+bool application::update() {
+  window_input();
+  running = !window_should_close(window);
+
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  imgui_begin_frame();
+
+  imgui_draw_raytraced_texture();
+  imgui_draw_render_settings();
+
+  imgui_end_frame();
+
+  window_update(window);
+
+  return running;
+}
+
+void application::imgui_init() {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
 
@@ -71,25 +80,7 @@ void setup_imgui(struct window_t *window) {
   }
 }
 
-bool application_update(struct application_t *application) {
-  window_input();
-  application->running = !window_should_close(application->window);
-
-  glClear(GL_COLOR_BUFFER_BIT);
-
-  imgui_beginframe();
-
-  imgui_draw_raytraced_texture(application);
-  imgui_draw_render_settings(application);
-
-  imgui_endframe();
-
-  window_update(application->window);
-
-  return application->running;
-}
-
-void imgui_beginframe() {
+void application::imgui_begin_frame() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
@@ -130,7 +121,7 @@ void imgui_beginframe() {
   ImGui::End();
 }
 
-void imgui_endframe() {
+void application::imgui_end_frame() {
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -143,14 +134,14 @@ void imgui_endframe() {
   }
 }
 
-void imgui_draw_raytraced_texture(struct application_t *application) {
+void application::imgui_draw_raytraced_texture() {
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
   ImGui::Begin("Raytrace View");
 
   ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 
-  float aspect = application->texture->data->width /
-                 float(application->texture->data->height);
+  float aspect =
+      texture.texture_data->width / float(texture.texture_data->height);
 
   int smallestSize = viewportPanelSize.x / aspect < viewportPanelSize.y
                          ? viewportPanelSize.x / aspect
@@ -163,7 +154,7 @@ void imgui_draw_raytraced_texture(struct application_t *application) {
           (ImGui::GetContentRegionAvail().y - smallestSize) * 0.5);
   ImGui::SetCursorPos(image_pos);
 
-  ImGui::Image((void *)(u64)application->texture->id,
+  ImGui::Image((void *)(u64)texture.id,
                ImVec2(smallestSize * aspect, smallestSize), ImVec2(0, 1),
                ImVec2(1, 0));
 
@@ -171,48 +162,39 @@ void imgui_draw_raytraced_texture(struct application_t *application) {
   ImGui::PopStyleVar();
 }
 
-void imgui_draw_render_settings(struct application_t *application) {
+void application::imgui_draw_render_settings() {
   ImGui::Begin("Settings");
 
   {
     // Resolution input field
-    i32 resolution[2]{application->state.settings.width,
-                      application->state.settings.height};
+    i32 resolution[2]{state.settings.width, state.settings.height};
 
     if (ImGui::InputInt2("Resolution", resolution)) {
-      if (application->state.settings.width != resolution[0] ||
-          application->state.settings.height != resolution[1]) {
+      if (state.settings.width != resolution[0] ||
+          state.settings.height != resolution[1]) {
 
-        application->state.settings.width = resolution[0];
-        application->state.settings.height = resolution[1];
+        state.settings.width = resolution[0];
+        state.settings.height = resolution[1];
 
-        texture_resize(application->texture, resolution[0], resolution[1]);
+        texture.resize(resolution[0], resolution[1]);
       }
     }
   }
 
   {
     // Samples per pixel input field
-    i32 value = application->state.settings.samples_per_pixel;
+    i32 value = state.settings.samples_per_pixel;
     ImGui::SliderInt("Samples Per Pixel", &value, 1, 1000);
-    application->state.settings.samples_per_pixel = value;
+    state.settings.samples_per_pixel = value;
   }
 
   {
     // Render button
     if (ImGui::Button("Render")) {
-      render_scene(&application->state);
-      texture_update_data(application->texture);
+      render_scene(&state);
+      texture.update_contents();
     }
   }
 
   ImGui::End();
-}
-
-void application_destroy(struct application_t *application) {
-  ImGui::DestroyContext();
-
-  window_destroy(application->window);
-
-  FREE(application);
 }
