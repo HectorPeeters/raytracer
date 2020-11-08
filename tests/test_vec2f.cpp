@@ -1,7 +1,7 @@
 #include <catch.hpp>
 
 #include "core.h"
-#include "vec2.h"
+#include "math/vec2.h"
 
 TEST_CASE("vec2f constructor sets all fields", "[vec2f]") {
   vec2f vec = vec2f(1.0f, 2.0f);

@@ -1,7 +1,7 @@
 #include <catch.hpp>
 
 #include "core.h"
-#include "vec4.h"
+#include "math/vec4.h"
 
 TEST_CASE("vec4f constructor sets all fields", "[vec4f]") {
   vec4f vec = vec4f(1.0f, 2.0f, 3.0f, 4.0);

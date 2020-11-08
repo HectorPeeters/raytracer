@@ -1,7 +1,5 @@
 #include "raytrace.h"
 
-#include "vec3.h"
-
 struct render_settings_t render_settings_create(u16 width, u16 height,
                                                 u32 samples_per_pixel) {
   return render_settings_t{

@@ -2,8 +2,8 @@
 
 #include "core.h"
 
-#include "vec3.h"
-#include "vec4.h"
+#include "math/vec3.h"
+#include "math/vec4.h"
 
 template <typename T> class texture {
 public:

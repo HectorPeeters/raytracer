@@ -1,7 +1,7 @@
 #pragma once
 
-#include "mat4.h"
-#include "vec3.h"
+#include "math/mat4.h"
+#include "math/vec3.h"
 
 struct transform_t {
   vec3f position;

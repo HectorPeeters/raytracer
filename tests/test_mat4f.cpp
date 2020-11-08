@@ -2,7 +2,7 @@
 
 #include "core.h"
 #include "log.h"
-#include "mat4.h"
+#include "math/mat4.h"
 
 TEST_CASE("mat4f constructor sets all rows", "[mat4f]") {
   mat4f mat =
