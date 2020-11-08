@@ -183,7 +183,7 @@ void application::imgui_draw_render_settings() {
     // Resolution input field
     i32 resolution[2]{state.settings.width, state.settings.height};
 
-    if (ImGui::InputInt2("Resolution", resolution)) {
+    if (ImGui::InputInt2("Resolution", resolution, ImGuiInputTextFlags_EnterReturnsTrue)) {
       if (state.settings.width != resolution[0] ||
           state.settings.height != resolution[1]) {
 
