@@ -150,6 +150,36 @@ TEST_CASE("vec2f div f32", "[vec2f]") {
   REQUIRE(res == vec2f(0.5f, 1.0f));
 }
 
+// f32 vec2f operations
+
+TEST_CASE("f32 add vec2f", "[vec2f]") {
+  vec2f a = vec2f(1.0f, 2.0f);
+  vec2f res = 2.0f + a;
+
+  REQUIRE(res == vec2f(3.0f, 4.0f));
+}
+
+TEST_CASE("f32 sub vec2f", "[vec2f]") {
+  vec2f a = vec2f(1.0f, 2.0f);
+  vec2f res = 2.0f - a;
+
+  REQUIRE(res == vec2f(1.0f, 0.0f));
+}
+
+TEST_CASE("f32 mul vec2f", "[vec2f]") {
+  vec2f a = vec2f(1.0f, 2.0f);
+  vec2f res = 2.0f * a;
+
+  REQUIRE(res == vec2f(2.0f, 4.0f));
+}
+
+TEST_CASE("f32 div vec2f", "[vec2f]") {
+  vec2f a = vec2f(1.0f, 2.0f);
+  vec2f res = 2.0f / a;
+
+  REQUIRE(res == vec2f(2.0f, 1.0f));
+}
+
 // vec2f vec2f assignment operators
 
 TEST_CASE("vec2f add assign vec2f", "[vec2f]") {

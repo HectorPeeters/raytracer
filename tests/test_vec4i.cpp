@@ -139,6 +139,36 @@ TEST_CASE("vec4i div i32", "[vec4i]") {
   REQUIRE(res == vec4i(0, 1, 1, 2));
 }
 
+// i32 vec4i operations
+
+TEST_CASE("i32 add vec4i", "[vec4i]") {
+  vec4i a = vec4i(1, 2, 3, 4);
+  vec4i res = 2 + a;
+
+  REQUIRE(res == vec4i(3, 4, 5, 6));
+}
+
+TEST_CASE("i32 sub vec4i", "[vec4i]") {
+  vec4i a = vec4i(1, 2, 3, 4);
+  vec4i res = 2 - a;
+
+  REQUIRE(res == vec4i(1, 0, -1, -2));
+}
+
+TEST_CASE("i32 mul vec4i", "[vec4i]") {
+  vec4i a = vec4i(1, 2, 3, 4);
+  vec4i res = 2 * a;
+
+  REQUIRE(res == vec4i(2, 4, 6, 8));
+}
+
+TEST_CASE("i32 div vec4i", "[vec4i]") {
+  vec4i a = vec4i(1, 2, 3, 4);
+  vec4i res = 2 / a;
+
+  REQUIRE(res == vec4i(2, 1, 0, 0));
+}
+
 // vec4i vec4i assignment operators
 
 TEST_CASE("vec4i add assign vec4i", "[vec4i]") {

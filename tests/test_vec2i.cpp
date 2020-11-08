@@ -124,6 +124,36 @@ TEST_CASE("vec2i div i32", "[vec2i]") {
   REQUIRE(res == vec2i(1, 2));
 }
 
+// i32 vec2i operations
+
+TEST_CASE("i32 add vec2i", "[vec2i]") {
+  vec2i a = vec2i(1, 2);
+  vec2i res = 2 + a;
+
+  REQUIRE(res == vec2i(3, 4));
+}
+
+TEST_CASE("i32 sub vec2i", "[vec2i]") {
+  vec2i a = vec2i(1, 2);
+  vec2i res = 2 - a;
+
+  REQUIRE(res == vec2i(1, 0));
+}
+
+TEST_CASE("i32 mul vec2i", "[vec2i]") {
+  vec2i a = vec2i(1, 2);
+  vec2i res = 2 * a;
+
+  REQUIRE(res == vec2i(2, 4));
+}
+
+TEST_CASE("i32 div vec2i", "[vec2i]") {
+  vec2i a = vec2i(1, 2);
+  vec2i res = 2 / a;
+
+  REQUIRE(res == vec2i(2, 1));
+}
+
 // vec2i vec2i assignment operators
 
 TEST_CASE("vec2i add assign vec2i", "[vec2i]") {

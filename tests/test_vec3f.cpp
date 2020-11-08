@@ -169,6 +169,36 @@ TEST_CASE("vec3f div f32", "[vec3f]") {
   REQUIRE(res == vec3f(0.5f, 1.0f, 1.5f));
 }
 
+// f32 vec3f operations
+
+TEST_CASE("f32 add vec3f", "[vec3f]") {
+  vec3f a = vec3f(1.0f, 2.0f, 3.0f);
+  vec3f res = 2.0f + a;
+
+  REQUIRE(res == vec3f(3.0f, 4.0f, 5.0f));
+}
+
+TEST_CASE("f32 sub vec3f", "[vec3f]") {
+  vec3f a = vec3f(1.0f, 2.0f, 3.0f);
+  vec3f res = 2.0f - a;
+
+  REQUIRE(res == vec3f(1.0f, 0.0f, -1.0f));
+}
+
+TEST_CASE("f32 mul vec3f", "[vec3f]") {
+  vec3f a = vec3f(1.0f, 2.0f, 3.0f);
+  vec3f res = 2.0f * a;
+
+  REQUIRE(res == vec3f(2.0f, 4.0f, 6.0f));
+}
+
+TEST_CASE("f32 div vec3f", "[vec3f]") {
+  vec3f a = vec3f(1.0f, 2.0f, 3.0f);
+  vec3f res = 2.0f / a;
+
+  REQUIRE(res == vec3f(2.0f, 1.0f, 0.666666f));
+}
+
 // vec3f vec3f assignment operators
 
 TEST_CASE("vec3f add assign vec3f", "[vec3f]") {

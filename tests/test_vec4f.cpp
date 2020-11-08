@@ -164,6 +164,36 @@ TEST_CASE("vec4f div f32", "[vec4f]") {
   REQUIRE(res == vec4f(0.5f, 1.0f, 1.5f, 2.0f));
 }
 
+// f32 vec4f operations
+
+TEST_CASE("f32 add vec4f", "[vec4f]") {
+  vec4f a = vec4f(1.0f, 2.0f, 3.0f, 4.0f);
+  vec4f res = 2.0f + a;
+
+  REQUIRE(res == vec4f(3.0f, 4.0f, 5.0f, 6.0f));
+}
+
+TEST_CASE("f32 sub vec4f", "[vec4f]") {
+  vec4f a = vec4f(1.0f, 2.0f, 3.0f, 4.0f);
+  vec4f res = 2.0f - a;
+
+  REQUIRE(res == vec4f(1.0f, 0.0f, -1.0f, -2.0f));
+}
+
+TEST_CASE("f32 mul vec4f", "[vec4f]") {
+  vec4f a = vec4f(1.0f, 2.0f, 3.0f, 4.0f);
+  vec4f res = 2.0f * a;
+
+  REQUIRE(res == vec4f(2.0f, 4.0f, 6.0f, 8.0f));
+}
+
+TEST_CASE("f32 div vec4f", "[vec4f]") {
+  vec4f a = vec4f(1.0f, 2.0f, 3.0f, 4.0f);
+  vec4f res = 2.0f / a;
+
+  REQUIRE(res == vec4f(2.0f, 1.0f, 0.666666f, 0.5f));
+}
+
 // vec4f vec4f assignment operators
 
 TEST_CASE("vec4f add assign vec4f", "[vec4f]") {
