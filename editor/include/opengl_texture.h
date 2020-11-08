@@ -1,6 +1,8 @@
 #pragma once
 
+#include <fstream>
 #include <glad/glad.h>
+#include <iostream>
 
 #include "core.h"
 #include "log.h"
@@ -22,7 +24,10 @@ template <typename T> inline u32 get_opengl_type();
 template <> inline u32 get_opengl_type<f32>() { return GL_FLOAT; }
 template <> inline u32 get_opengl_type<u8>() { return GL_UNSIGNED_BYTE; }
 
-// TODO: fix the taking in of a pointer to the texture
+template <typename T> inline u32 get_ppm_export_scale();
+template <> inline u32 get_ppm_export_scale<f32>() { return 255; }
+template <> inline u32 get_ppm_export_scale<u8>() { return 1; }
+
 template <typename T> class opengl_texture {
 public:
   opengl_texture() {}
@@ -85,6 +90,28 @@ public:
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_data->width,
                  texture_data->height, 0, format, get_opengl_type<T>(),
                  nullptr);
+  }
+
+  void write_to_file(const char *path) {
+    std::ofstream file;
+    file.open(path);
+    file << "P3\n";
+    file << texture_data->width << " " << texture_data->height << "\n";
+    file << "255\n";
+
+    for (u16 y = 0; y < texture_data->height; y++) {
+      for (u16 x = 0; x < texture_data->width; x++) {
+        u32 index = (x + y * texture_data->width) * 4;
+
+        vec4f pixel =
+            vec4f(texture_data->data[index], texture_data->data[index + 1],
+                  texture_data->data[index + 2], texture_data->data[index + 3]);
+        pixel *= get_ppm_export_scale<T>();
+
+        file << (u16)pixel.x << " " << (u16)pixel.y << " " << (u16)pixel.z
+             << "\n";
+      }
+    }
   }
 
 public:
