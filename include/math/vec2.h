@@ -49,6 +49,17 @@ public:
     }
   }
 
+  friend bool operator==(const vec2<T> &left, const vec2<T> &right) {
+    return APPROX_EQ(left.x, right.x) && APPROX_EQ(left.y, right.y);
+  }
+
+  vec2<T> operator-() {
+    return vec2<T>{
+        -x,
+        -y,
+    };
+  }
+
   vec2<T> operator+(const vec2<T> &right) {
     return vec2<T>{
         x + right.x,
@@ -125,6 +136,34 @@ public:
     };
   }
 
+  friend vec2<T> operator+(T left, const vec2<T> &right) {
+    return vec2<T>{
+        left + right.x,
+        left + right.y,
+    };
+  }
+
+  friend vec2<T> operator-(T left, const vec2<T> &right) {
+    return vec2<T>{
+        left - right.x,
+        left - right.y,
+    };
+  }
+
+  friend vec2<T> operator*(T left, const vec2<T> &right) {
+    return vec2<T>{
+        left * right.x,
+        left * right.y,
+    };
+  }
+
+  friend vec2<T> operator/(T left, const vec2<T> &right) {
+    return vec2<T>{
+        left / right.x,
+        left / right.y,
+    };
+  }
+
   void operator+=(T right) {
     x += right;
     y += right;
@@ -148,11 +187,6 @@ public:
 public:
   T x, y;
 };
-
-template <typename T>
-bool operator==(const vec2<T> &left, const vec2<T> &right) {
-  return APPROX_EQ(left.x, right.x) && APPROX_EQ(left.y, right.y);
-}
 
 typedef vec2<f32> vec2f;
 typedef vec2<i32> vec2i;

@@ -44,6 +44,14 @@ public:
     return x * other.x + y * other.y + z * other.z;
   }
 
+  vec3<T> cross(const vec3<T> &other) {
+    return vec3<T>{
+        y * other.z - other.y * z,
+        z * other.x - other.z * x,
+        x * other.y - other.x * y,
+    };
+  }
+
   T &operator[](int index) {
     if (index == 0) {
       return x;
@@ -56,12 +64,9 @@ public:
     }
   }
 
-  vec3<T> cross(const vec3<T> &other) {
-    return vec3<T>{
-        y * other.z - other.y * z,
-        z * other.x - other.z * x,
-        x * other.y - other.x * y,
-    };
+  friend bool operator==(const vec3<T> &left, const vec3<T> &right) {
+    return APPROX_EQ(left.x, right.x) && APPROX_EQ(left.y, right.y) &&
+           APPROX_EQ(left.z, right.z);
   }
 
   vec3<T> operator-() {
@@ -160,6 +165,38 @@ public:
     };
   }
 
+  friend vec3<T> operator+(T left, const vec3<T> &right) {
+    return vec3<T>{
+        left + right.x,
+        left + right.y,
+        left + right.z,
+    };
+  }
+
+  friend vec3<T> operator-(T left, const vec3<T> &right) {
+    return vec3<T>{
+        left - right.x,
+        left - right.y,
+        left - right.z,
+    };
+  }
+
+  friend vec3<T> operator*(T left, const vec3<T> &right) {
+    return vec3<T>{
+        left * right.x,
+        left * right.y,
+        left * right.z,
+    };
+  }
+
+  friend vec3<T> operator/(T left, const vec3<T> &right) {
+    return vec3<T>{
+        left / right.x,
+        left / right.y,
+        left / right.z,
+    };
+  }
+
   void operator+=(T right) {
     x += right;
     y += right;
@@ -187,12 +224,6 @@ public:
 public:
   T x, y, z;
 };
-
-template <typename T>
-bool operator==(const vec3<T> &left, const vec3<T> &right) {
-  return APPROX_EQ(left.x, right.x) && APPROX_EQ(left.y, right.y) &&
-         APPROX_EQ(left.z, right.z);
-}
 
 typedef vec3<f32> vec3f;
 typedef vec3<i32> vec3i;
