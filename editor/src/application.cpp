@@ -25,6 +25,8 @@ application::application()
   }
   texture.update_contents();
 
+  imgui_init();
+
   theme_cherry();
 }
 
