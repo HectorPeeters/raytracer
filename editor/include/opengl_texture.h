@@ -79,6 +79,12 @@ public:
 
   void resize(u16 new_width, u16 new_height) {
     texture_data->resize(new_width, new_height);
+
+    u16 format = opengl_texture_format(texture_data->components);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_data->width,
+                 texture_data->height, 0, format, get_opengl_type<T>(),
+                 nullptr);
   }
 
 public:
