@@ -3,6 +3,8 @@
 #include "sphere.h"
 #include "thread.h"
 
+#include <algorithm>
+
 render_state::render_state(struct render_settings_t settings,
                            camera render_camera)
     : buffer(settings.width, settings.height, 4), settings(settings),
@@ -29,14 +31,23 @@ void render_state::populate_jobs_queue() {
       vec2i end(MIN(x + job_size, settings.width),
                 MIN(y + job_size, settings.height));
 
-      LDEBG("%d %d", x, y);
-
       render_job job(id, start, end, this);
       jobs_queue.push_back(job);
 
       id++;
     }
   }
+
+  vec2i screen_center(settings.width / 2, settings.height / 2);
+
+  std::stable_sort(jobs_queue.begin(), jobs_queue.end(),
+                   [=](const render_job &a, const render_job &b) {
+                     vec2i a_center = (a.start_pos + a.end_pos) / 2;
+                     vec2i b_center = (b.start_pos + b.end_pos) / 2;
+                     f32 a_dist = a_center.distance(screen_center);
+                     f32 b_dist = b_center.distance(screen_center);
+                     return a_dist < b_dist;
+                   });
 
   queue_mutex.unlock();
 }
@@ -50,9 +61,7 @@ render_job render_state::get_next_job() {
   return job;
 }
 
-bool render_state::jobs_finished() {
-  return job_index == jobs_queue.size();
-}
+bool render_state::jobs_finished() { return job_index == jobs_queue.size(); }
 
 void render_state::resize(u16 width, u16 height) {
   buffer.resize(width, height);
@@ -116,7 +125,7 @@ void render_state::render_scene() {
   buffer.clear(vec4f(0.3));
   job_index = 0;
 
-  for (u8 i = 0; i < 8; i++) {
+  for (u8 i = 0; i < 16; i++) {
     thread<render_state> render_thread(run_render_thread);
     render_thread.start(this);
   }
