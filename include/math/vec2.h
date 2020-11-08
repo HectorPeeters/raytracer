@@ -13,15 +13,15 @@ public:
 
   ~vec2() {}
 
-  f32 length() { return sqrtf(x * x + y * y); }
+  f32 length() const { return sqrtf(x * x + y * y); }
 
-  f32 length_sqrt() { return x * x + y * y; }
+  f32 length_sqrt() const { return x * x + y * y; }
 
-  f32 distance(const vec2<T> &other) {
+  f32 distance(const vec2<T> &other) const {
     return sqrtf((x - other.x) * (x - other.x) + (y - other.y) * (y - other.y));
   }
 
-  vec2<T> normalized() {
+  vec2<T> normalized() const {
     T one_over_length = 1 / sqrtf(x * x + y * y);
 
     return vec2<T>{
@@ -37,7 +37,7 @@ public:
     y *= one_over_length;
   }
 
-  T dot(const vec2<T> &other) { return x * other.x + y * other.y; }
+  T dot(const vec2<T> &other) const { return x * other.x + y * other.y; }
 
   T &operator[](int index) {
     if (index == 0) {
@@ -53,35 +53,35 @@ public:
     return APPROX_EQ(left.x, right.x) && APPROX_EQ(left.y, right.y);
   }
 
-  vec2<T> operator-() {
+  vec2<T> operator-() const {
     return vec2<T>{
         -x,
         -y,
     };
   }
 
-  vec2<T> operator+(const vec2<T> &right) {
+  vec2<T> operator+(const vec2<T> &right) const {
     return vec2<T>{
         x + right.x,
         y + right.y,
     };
   }
 
-  vec2<T> operator-(const vec2<T> &right) {
+  vec2<T> operator-(const vec2<T> &right) const {
     return vec2<T>{
         x - right.x,
         y - right.y,
     };
   }
 
-  vec2<T> operator*(const vec2<T> &right) {
+  vec2<T> operator*(const vec2<T> &right) const {
     return vec2<T>{
         x * right.x,
         y * right.y,
     };
   }
 
-  vec2<T> operator/(const vec2<T> &right) {
+  vec2<T> operator/(const vec2<T> &right) const {
     return vec2<T>{
         x / right.x,
         y / right.y,
@@ -108,28 +108,28 @@ public:
     y /= right.y;
   }
 
-  vec2<T> operator+(T right) {
+  vec2<T> operator+(T right) const {
     return vec2<T>{
         x + right,
         y + right,
     };
   }
 
-  vec2<T> operator-(T right) {
+  vec2<T> operator-(T right) const {
     return vec2<T>{
         x - right,
         y - right,
     };
   }
 
-  vec2<T> operator*(T right) {
+  vec2<T> operator*(T right) const {
     return vec2<T>{
         x * right,
         y * right,
     };
   }
 
-  vec2<T> operator/(T right) {
+  vec2<T> operator/(T right) const {
     return vec2<T>{
         x / right,
         y / right,

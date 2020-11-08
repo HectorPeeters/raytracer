@@ -8,17 +8,17 @@
 
 template <typename T> class mat4 {
 public:
-  inline mat4()  {}
+  inline mat4() {}
   inline mat4(vec4<T> r0, vec4<T> r1, vec4<T> r2, vec4<T> r3)
       : r0(r0), r1(r1), r2(r2), r3(r3) {}
   ~mat4() {}
 
   static mat4<T> zero() {
     return mat4<T>{
-        vec4<T>::zero(),
-        vec4<T>::zero(),
-        vec4<T>::zero(),
-        vec4<T>::zero(),
+        vec4<T>(0),
+        vec4<T>(0),
+        vec4<T>(0),
+        vec4<T>(0),
     };
   }
 
@@ -107,7 +107,7 @@ public:
     return result;
   }
 
-  mat4<T> transpose() {
+  mat4<T> transpose() const {
     return mat4<T>{
         vec4<T>{r0[0], r1[0], r2[0], r3[0]},
         vec4<T>{r0[1], r1[1], r2[1], r3[1]},
@@ -116,7 +116,7 @@ public:
     };
   }
 
-  mat4<T> adjoint() {
+  mat4<T> adjoint() const {
     T t00 = r2[2] * r3[3] - r3[2] * r2[3];
     T t01 = r2[1] * r3[3] - r3[1] * r2[3];
     T t02 = r2[1] * r3[2] - r3[1] * r2[2];
@@ -167,7 +167,7 @@ public:
     return {res_r0, res_r1, res_r2, res_r3};
   }
 
-  mat4<T> inverse() {
+  mat4<T> inverse() const {
     mat4<T> adjacency_matrix = adjoint();
 
     T det = r0[0] * adjacency_matrix.r0[0] + r1[0] * adjacency_matrix.r0[1] +
@@ -176,7 +176,7 @@ public:
     return adjacency_matrix / det;
   }
 
-  vec4<T> operator[](int index) {
+  vec4<T> &operator[](int index) {
     if (index == 0) {
       return r0;
     } else if (index == 1) {
@@ -190,7 +190,26 @@ public:
     }
   }
 
-  mat4<T> operator*(mat4<T> right) {
+  vec4<T> operator[](int index) const {
+    if (index == 0) {
+      return r0;
+    } else if (index == 1) {
+      return r1;
+    } else if (index == 2) {
+      return r2;
+    } else if (index == 3) {
+      return r3;
+    } else {
+      UNREACHABLE();
+    }
+  }
+
+  friend bool operator==(const mat4<T> &left, const mat4<T> &right) {
+    return left.r0 == right.r0 && left.r1 == right.r1 && left.r2 == right.r2 &&
+           left.r3 == right.r3;
+  }
+
+  mat4<T> operator*(mat4<T> right) const {
     mat4<T> transposed = right.transpose();
     return mat4<T>{
         vec4<T>{r0.dot(transposed.r0), r0.dot(transposed.r1),
@@ -212,7 +231,7 @@ public:
     r3 = result.r3;
   }
 
-  vec4<T> operator*(vec4<T> vec) {
+  vec4<T> operator*(vec4<T> vec) const {
     return vec4<T>{
         r0.dot(vec),
         r1.dot(vec),
@@ -221,7 +240,7 @@ public:
     };
   }
 
-  mat4<T> operator*(T right) {
+  mat4<T> operator*(T right) const {
     return mat4<T>{
         r0 * right,
         r1 * right,
@@ -230,7 +249,7 @@ public:
     };
   }
 
-  mat4<T> operator/(T right) {
+  mat4<T> operator/(T right) const {
     T one_over_right = 1 / right;
     return mat4<T>{
         r0 * one_over_right,
@@ -257,12 +276,6 @@ public:
 public:
   vec4<T> r0, r1, r2, r3;
 };
-
-template <typename T>
-bool operator==(const mat4<T> &left, const mat4<T> &right) {
-  return left.r0 == right.r0 && left.r1 == right.r1 && left.r2 == right.r2 &&
-         left.r3 == right.r3;
-}
 
 typedef mat4<f32> mat4f;
 typedef mat4<i32> mat4i;

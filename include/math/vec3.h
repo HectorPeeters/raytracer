@@ -13,16 +13,16 @@ public:
 
   ~vec3() {}
 
-  f32 length() { return sqrtf(x * x + y * y + z * z); }
+  f32 length() const { return sqrtf(x * x + y * y + z * z); }
 
-  f32 length_sqrt() { return x * x + y * y + z * z; }
+  f32 length_sqrt() const { return x * x + y * y + z * z; }
 
-  f32 distance(const vec3<T> &other) {
+  f32 distance(const vec3<T> &other) const {
     return sqrtf((x - other.x) * (x - other.x) + (y - other.y) * (y - other.y) +
                  (z - other.z) * (z - other.z));
   }
 
-  vec3<T> normalized() {
+  vec3<T> normalized() const {
     T one_over_length = 1 / sqrtf(x * x + y * y + z * z);
 
     return vec3<T>{
@@ -40,11 +40,11 @@ public:
     z *= one_over_length;
   }
 
-  T dot(const vec3<T> &other) {
+  T dot(const vec3<T> &other) const {
     return x * other.x + y * other.y + z * other.z;
   }
 
-  vec3<T> cross(const vec3<T> &other) {
+  vec3<T> cross(const vec3<T> &other) const {
     return vec3<T>{
         y * other.z - other.y * z,
         z * other.x - other.z * x,
@@ -64,12 +64,24 @@ public:
     }
   }
 
+  T operator[](int index) const {
+    if (index == 0) {
+      return x;
+    } else if (index == 1) {
+      return y;
+    } else if (index == 2) {
+      return z;
+    } else {
+      UNREACHABLE();
+    }
+  }
+
   friend bool operator==(const vec3<T> &left, const vec3<T> &right) {
     return APPROX_EQ(left.x, right.x) && APPROX_EQ(left.y, right.y) &&
            APPROX_EQ(left.z, right.z);
   }
 
-  vec3<T> operator-() {
+  vec3<T> operator-() const {
     return vec3<T>{
         -x,
         -y,
@@ -77,7 +89,7 @@ public:
     };
   }
 
-  vec3<T> operator+(const vec3<T> &right) {
+  vec3<T> operator+(const vec3<T> &right) const {
     return vec3<T>{
         x + right.x,
         y + right.y,
@@ -85,7 +97,7 @@ public:
     };
   }
 
-  vec3<T> operator-(const vec3<T> &right) {
+  vec3<T> operator-(const vec3<T> &right) const {
     return vec3<T>{
         x - right.x,
         y - right.y,
@@ -93,7 +105,7 @@ public:
     };
   }
 
-  vec3<T> operator*(const vec3<T> &right) {
+  vec3<T> operator*(const vec3<T> &right) const {
     return vec3<T>{
         x * right.x,
         y * right.y,
@@ -101,7 +113,7 @@ public:
     };
   }
 
-  vec3<T> operator/(const vec3<T> &right) {
+  vec3<T> operator/(const vec3<T> &right) const {
     return vec3<T>{
         x / right.x,
         y / right.y,
@@ -133,7 +145,7 @@ public:
     z /= right.z;
   }
 
-  vec3<T> operator+(T right) {
+  vec3<T> operator+(T right) const {
     return vec3<T>{
         x + right,
         y + right,
@@ -141,7 +153,7 @@ public:
     };
   }
 
-  vec3<T> operator-(T right) {
+  vec3<T> operator-(T right) const {
     return vec3<T>{
         x - right,
         y - right,
@@ -149,7 +161,7 @@ public:
     };
   }
 
-  vec3<T> operator*(T right) {
+  vec3<T> operator*(T right) const {
     return vec3<T>{
         x * right,
         y * right,
@@ -157,7 +169,7 @@ public:
     };
   }
 
-  vec3<T> operator/(T right) {
+  vec3<T> operator/(T right) const {
     return vec3<T>{
         x / right,
         y / right,

@@ -11,18 +11,16 @@ public:
   inline vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
   inline vec4(const vec4<T> &vec) : x(vec.x), y(vec.y), z(vec.z), w(vec.w) {}
 
-  static inline vec4<T> zero() { return vec4<T>(0, 0, 0, 0); }
+  f32 length() const { return sqrtf(x * x + y * y + z * z + w * w); }
 
-  f32 length() { return sqrtf(x * x + y * y + z * z + w * w); }
+  f32 length_sqrt() const { return x * x + y * y + z * z + w * w; }
 
-  f32 length_sqrt() { return x * x + y * y + z * z + w * w; }
-
-  f32 distance(const vec4<T> &other) {
+  f32 distance(const vec4<T> &other) const {
     return sqrtf((x - other.x) * (x - other.x) + (y - other.y) * (y - other.y) +
                  (z - other.z) * (z - other.z) + (w - other.w) * (w - other.w));
   }
 
-  vec4<T> normalized() {
+  vec4<T> normalized() const {
     T one_over_length = 1 / sqrtf(x * x + y * y + z * z + w * w);
 
     return vec4<T>{
@@ -42,11 +40,25 @@ public:
     w *= one_over_length;
   }
 
-  T dot(const vec4<T> &other) {
+  T dot(const vec4<T> &other) const {
     return x * other.x + y * other.y + z * other.z + w * other.w;
   }
 
   T &operator[](int index) {
+    if (index == 0) {
+      return x;
+    } else if (index == 1) {
+      return y;
+    } else if (index == 2) {
+      return z;
+    } else if (index == 3) {
+      return w;
+    } else {
+      UNREACHABLE();
+    }
+  }
+
+  T operator[](int index) const {
     if (index == 0) {
       return x;
     } else if (index == 1) {
@@ -65,7 +77,7 @@ public:
            APPROX_EQ(left.z, right.z) && APPROX_EQ(left.w, right.w);
   }
 
-  vec4<T> operator-() {
+  vec4<T> operator-() const {
     return vec4<T>{
         -x,
         -y,
@@ -74,7 +86,7 @@ public:
     };
   }
 
-  vec4<T> operator+(const vec4<T> &right) {
+  vec4<T> operator+(const vec4<T> &right) const {
     return vec4<T>{
         x + right.x,
         y + right.y,
@@ -83,7 +95,7 @@ public:
     };
   }
 
-  vec4<T> operator-(const vec4<T> &right) {
+  vec4<T> operator-(const vec4<T> &right) const {
     return vec4<T>{
         x - right.x,
         y - right.y,
@@ -92,7 +104,7 @@ public:
     };
   }
 
-  vec4<T> operator*(const vec4<T> &right) {
+  vec4<T> operator*(const vec4<T> &right) const {
     return vec4<T>{
         x * right.x,
         y * right.y,
@@ -101,7 +113,7 @@ public:
     };
   }
 
-  vec4<T> operator/(const vec4<T> &right) {
+  vec4<T> operator/(const vec4<T> &right) const {
     return vec4<T>{
         x / right.x,
         y / right.y,
@@ -138,7 +150,7 @@ public:
     w /= right.w;
   }
 
-  vec4<T> operator+(T right) {
+  vec4<T> operator+(T right) const {
     return vec4<T>{
         x + right,
         y + right,
@@ -147,7 +159,7 @@ public:
     };
   }
 
-  vec4<T> operator-(T right) {
+  vec4<T> operator-(T right) const {
     return vec4<T>{
         x - right,
         y - right,
@@ -156,7 +168,7 @@ public:
     };
   }
 
-  vec4<T> operator*(T right) {
+  vec4<T> operator*(T right) const {
     return vec4<T>{
         x * right,
         y * right,
@@ -165,7 +177,7 @@ public:
     };
   }
 
-  vec4<T> operator/(T right) {
+  vec4<T> operator/(T right) const {
     return vec4<T>{
         x / right,
         y / right,
