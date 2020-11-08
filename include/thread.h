@@ -8,12 +8,32 @@
 #error Unsupported platform !
 #endif
 
-class thread {
-public:
-  thread(void (*func)());
+#include "log.h"
 
-  void start();
-  void join();
+template <typename T> class thread {
+public:
+  thread(void (*func)(T *)) : func(func) {}
+
+#ifdef _X11
+  void start(T *data) {
+    if (pthread_create(&id, nullptr, (void *(*)(void *))func, (void*)data)) {
+      LERR("Failed to create thread");
+    }
+  }
+
+  void join() {
+    if (pthread_join(id, nullptr)) {
+      LWARN("Thread froze!!!");
+    }
+  }
+#elif _WINDOWS
+  void thread::start(T *data) {
+    handle = CreateThread(nullptr, 0, func, nullptr, 0, &id);
+    if (!handle) {
+      LERR("Failed to create Windows thread");
+    }
+  }
+#endif
 
 private:
 #ifdef _X11
@@ -23,5 +43,5 @@ private:
   DWORD id;
 #endif
 
-  void (*func)();
+  void (*func)(T *);
 };
