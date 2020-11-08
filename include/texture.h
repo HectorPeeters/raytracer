@@ -2,7 +2,54 @@
 
 #include "core.h"
 
-struct texture_data_t {
+#include "vec3.h"
+#include "vec4.h"
+
+template <typename T> class texture {
+public:
+  texture(u16 width, u16 height, u8 components)
+      : width(width), height(height), components(components) {
+    data = ALLOC_SIZED(T, width * height * components);
+  }
+
+  texture(const texture &texture) = delete;
+
+  texture(texture &&texture)
+      : width(texture.width), height(texture.height),
+        components(texture.components), data(texture.data) {}
+
+
+  ~texture() {
+    if (data)
+      FREE(data);
+  }
+
+  void set(u16 x, u16 y, vec4<T> color) {
+    u32 index = (x + y * width) * components;
+
+    for (u8 i = 0; i < components; i++) {
+      data[index + i] = color[i];
+    }
+  }
+
+  void clear(vec4<T> color) {
+    for (u32 i = 0; i < width * height; i++) {
+      for (u8 j = 0; j < components; j++) {
+        data[i * components + j] = color[j];
+      }
+    }
+  }
+
+  void resize(u16 new_width, u16 new_height) {
+    FREE(data);
+
+    width = new_width;
+    height = new_height;
+
+    data = ALLOC_SIZED(T, width * height * components);
+  }
+
+public:
   // the width of the texture
   u16 width;
 
@@ -13,19 +60,5 @@ struct texture_data_t {
   u8 components;
 
   // the pixel data of the texture
-  u8 *data;
+  T *data;
 };
-
-struct texture_data_t *texture_data_create(u16 width, u16 height,
-                                           u8 components);
-
-void texture_data_set(struct texture_data_t *texture, u16 x, u16 y, u8 r, u8 g,
-                      u8 b);
-void texture_data_set(struct texture_data_t *texture, u16 x, u16 y, u8 r, u8 g,
-                      u8 b, u8 a);
-
-void texture_data_clear(struct texture_data_t *texture, u16 r, u16 g, u16 b);
-
-void texture_data_resize(struct texture_data_t *texture, u16 width, u16 height);
-
-void texture_data_destroy(struct texture_data_t *texture);
