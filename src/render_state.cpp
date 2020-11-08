@@ -30,8 +30,11 @@ void render_state::render_scene() {
 
       // loop for each sample of this pixel
       for (int s = 0; s < settings.samples_per_pixel; s++) {
-        vec3f color = (render_camera.get_ray(u, v).direction + 1.0f) / 2.0f;
-        result += vec4f(color.x, color.y, color.z, 1.0f);
+        vec3f dir = render_camera.get_ray(u, v).direction;
+        f32 t = 0.5f * (dir.y + 1.0f);
+
+        result += (1.0f - t) * vec4f(1.0f, 1.0f, 1.0f, 1.0f)+
+                 t * vec4f(0.5f, 0.7f, 1.0f, 1.0f);
       }
 
       // average all samples
