@@ -1,10 +1,13 @@
 #pragma once
 
+#include <vector>
+
 #include "core.h"
 #include "opengl_texture.h"
 #include "raytrace.h"
-#include "window.h"
 #include "render_state.h"
+#include "ui_panel.h"
+#include "window.h"
 
 class application {
 public:
@@ -15,6 +18,12 @@ public:
 
   bool update();
 
+  template <class T> void add_panel() {
+    T *value = new T();
+    value->init();
+    panels.push_back(value);
+  }
+
 private:
   void imgui_init();
   void imgui_destroy();
@@ -22,12 +31,11 @@ private:
   void imgui_begin_frame();
   void imgui_end_frame();
 
-  void imgui_draw_raytraced_texture();
-  void imgui_draw_render_settings();
+public:
+  bool running;
+  window editor_window;
+  render_state state;
 
 private:
-  bool running;
-  render_state state;
-  opengl_texture<f32> texture;
-  window editor_window;
+  std::vector<ui_panel *> panels;
 };

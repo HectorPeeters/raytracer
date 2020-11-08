@@ -3,6 +3,7 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <stdlib.h>
 
 #include "log.h"
@@ -15,25 +16,12 @@ application::application()
     : editor_window(window(1920 / 3 * 2, 1080 / 3 * 2, "Raytracer")),
       running(true), state(render_state(render_settings_t{},
                                         camera(transform(), 70.0f, 0.1f, 100.0f,
-                                               1920.0f / 1080.0f))),
-      texture(opengl_texture<f32>(&state.buffer)) {}
+                                               1920.0f / 1080.0f))) {}
 
 void application::init() {
   editor_window.init();
 
-  texture.init();
-
   state.init();
-
-  for (int i = 0; i < state.settings.width; i++) {
-    for (int j = 0; j < state.settings.height; j++) {
-      state.buffer.set(i, j,
-                       vec4f(i / (f32)state.settings.width,
-                             j / (f32)state.settings.height, 1.0f, 1.0f));
-    }
-  }
-
-  texture.update_contents();
 
   imgui_init();
 
@@ -41,7 +29,9 @@ void application::init() {
 }
 
 void application::destroy() {
-  texture.destroy();
+  for (ui_panel *panel : panels) {
+    panel->deinit();
+  }
   ImGui::DestroyContext();
   editor_window.destroy();
 }
@@ -52,12 +42,17 @@ bool application::update() {
 
   glClear(GL_COLOR_BUFFER_BIT);
 
-  texture.update_contents();
-
   imgui_begin_frame();
 
-  imgui_draw_raytraced_texture();
-  imgui_draw_render_settings();
+  ImGui::ShowDemoWindow();
+
+  for (ui_panel *panel : panels) {
+    if (panel->showing) {
+      ImGui::Begin(panel->get_title(), &panel->showing);
+      panel->draw(*this);
+      ImGui::End();
+    }
+  }
 
   imgui_end_frame();
 
@@ -146,80 +141,4 @@ void application::imgui_end_frame() {
     ImGui::RenderPlatformWindowsDefault();
     glfwMakeContextCurrent(backup_context);
   }
-}
-
-void application::imgui_draw_raytraced_texture() {
-  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
-  ImGui::Begin("Raytrace View");
-
-  if(ImGui::Button("Save")) {
-    texture.write_to_file("output.ppm");
-  }
-  ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-
-  float aspect =
-      texture.texture_data->width / float(texture.texture_data->height);
-
-  int smallestSize = viewportPanelSize.x / aspect < viewportPanelSize.y
-                         ? viewportPanelSize.x / aspect
-                         : viewportPanelSize.y;
-
-  ImVec2 image_pos = ImVec2(
-      ImGui::GetCursorPos().x +
-          (ImGui::GetContentRegionAvail().x - smallestSize * aspect) * 0.5,
-      ImGui::GetCursorPos().y +
-          (ImGui::GetContentRegionAvail().y - smallestSize) * 0.5);
-  ImGui::SetCursorPos(image_pos);
-
-  ImGui::Image((void *)(u64)texture.id,
-               ImVec2(smallestSize * aspect, smallestSize), ImVec2(0, 1),
-               ImVec2(1, 0));
-
-  ImGui::End();
-  ImGui::PopStyleVar();
-}
-
-void application::imgui_draw_render_settings() {
-  ImGui::Begin("Settings");
-
-  {
-    // Resolution input field
-    i32 resolution[2]{state.settings.width, state.settings.height};
-
-    if (ImGui::InputInt2("Resolution", resolution, ImGuiInputTextFlags_EnterReturnsTrue)) {
-      if (state.settings.width != resolution[0] ||
-          state.settings.height != resolution[1]) {
-
-        state.settings.width = resolution[0];
-        state.settings.height = resolution[1];
-
-        texture.resize(resolution[0], resolution[1]);
-        state.resize(resolution[0], resolution[1]);
-      }
-    }
-  }
-
-  {
-    // Samples per pixel input field
-    i32 samples = state.settings.samples_per_pixel;
-    ImGui::SliderInt("Samples Per Pixel", &samples, 1, 1000);
-    state.settings.samples_per_pixel = samples;
-  }
-
-  {
-    // Amount of threads to use for rendering
-    i32 threads = state.settings.thread_count;
-    ImGui::SliderInt("Threads", &threads, 1, 16);
-    state.settings.thread_count = threads;
-  }
-
-  {
-    // Render button
-    if (ImGui::Button("Render")) {
-      state.render_scene();
-      texture.update_contents();
-    }
-  }
-
-  ImGui::End();
 }

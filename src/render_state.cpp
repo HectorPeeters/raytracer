@@ -1,8 +1,8 @@
 #include "render_state.h"
 
+#include "sampler.h"
 #include "sphere.h"
 #include "thread.h"
-#include "sampler.h"
 
 #include <algorithm>
 
@@ -51,6 +51,8 @@ void render_state::populate_jobs_queue() {
                    });
 
   queue_mutex.unlock();
+
+  job_index = jobs_queue.size();
 }
 
 render_job render_state::get_next_job() {
@@ -75,7 +77,8 @@ void render_state::resize(u16 width, u16 height) {
   populate_jobs_queue();
 }
 
-static void render_single_job(render_state *state, render_job job, sampler<f32>& sampler) {
+static void render_single_job(render_state *state, render_job job,
+                              sampler<f32> &sampler) {
   sphere sphere(transform(vec3f(0.0f, 0.0f, -2.0f), vec3f(0.0f, 0.0f, 0.0f),
                           vec3f(1.0f, 1.0f, 1.0f)));
   sphere.object_transform.update_matrices();

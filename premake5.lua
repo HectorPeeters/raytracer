@@ -43,7 +43,7 @@ project "Editor"
 
     includedirs { "editor/include/", "libs/glad/include/", "libs/glfw/include/", "libs/imgui/", "libs/imgui/examples", "libs/parson", "include/" }
     
-    files { "editor/src/*.cpp" }
+    files { "editor/src/*.cpp", "editor/src/panels/*.cpp" }
 
     links { "GLFW", "GLAD", "ImGui", "Parson", "Raytracer" }
 

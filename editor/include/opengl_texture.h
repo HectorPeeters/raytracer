@@ -1,12 +1,9 @@
 #pragma once
 
-#include <fstream>
 #include <glad/glad.h>
-#include <iostream>
 
 #include "core.h"
 #include "log.h"
-#include "texture.h"
 
 static u16 opengl_texture_format(u8 components) {
   switch (components) {
@@ -30,18 +27,14 @@ template <> inline u32 get_ppm_export_scale<u8>() { return 1; }
 
 template <typename T> class opengl_texture {
 public:
-  opengl_texture() {}
+  opengl_texture(u8 components, u16 width, u16 height)
+      : components(components), width(width), height(height) {}
 
   opengl_texture(const opengl_texture &texture) = delete;
 
-  opengl_texture(opengl_texture &&texture)
-      : id(texture.id), texture_data(texture_data) {}
-
-  opengl_texture(texture<T> *texture) : texture_data(texture) {}
+  opengl_texture(opengl_texture &&texture) : id(texture.id) {}
 
   void init() {
-    texture_data->init();
-
     // generate the OpenGL texture
     glGenTextures(1, &id);
     // bind the OpenGL texture
@@ -51,70 +44,45 @@ public:
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    u16 format = opengl_texture_format(texture_data->components);
+    u16 format = opengl_texture_format(components);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_data->width,
-                 texture_data->height, 0, format, get_opengl_type<T>(),
-                 nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, format,
+                 get_opengl_type<T>(), nullptr);
 
     LDEBG("Generated texture with id %d", id);
   }
 
-  void destroy() {
-    glDeleteTextures(1, &id);
-    texture_data->destroy();
-  }
+  void destroy() { glDeleteTextures(1, &id); }
 
-  void update_contents() {
+  void update_contents(void* data) {
     // bind the texture
     glBindTexture(GL_TEXTURE_2D, id);
 
     // determine the format based on the component count
-    u16 format = opengl_texture_format(texture_data->components);
+    u16 format = opengl_texture_format(components);
 
     // update the contents of the texture
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texture_data->width,
-                    texture_data->height, format, get_opengl_type<T>(),
-                    texture_data->data);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format,
+                    get_opengl_type<T>(), data);
   }
-
-  void set(u16 x, u16 y, vec4<T> color) { texture_data->set(x, y, color); }
-
-  void clear(vec4<T> color) { texture_data->clear(color); }
 
   void resize(u16 new_width, u16 new_height) {
-    texture_data->resize(new_width, new_height);
+    if (width != new_width || height != new_height) {
+      u16 format = opengl_texture_format(components);
 
-    u16 format = opengl_texture_format(texture_data->components);
+      width = new_width;
+      height = new_height;
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_data->width,
-                 texture_data->height, 0, format, get_opengl_type<T>(),
-                 nullptr);
-  }
-
-  void write_to_file(const char *path) {
-    std::ofstream file;
-    file.open(path);
-    file << "P3\n";
-    file << texture_data->width << " " << texture_data->height << "\n";
-    file << "255\n";
-
-    for (u16 y = 0; y < texture_data->height; y++) {
-      for (u16 x = 0; x < texture_data->width; x++) {
-        u32 index = (x + y * texture_data->width) * 4;
-
-        vec4f pixel =
-            vec4f(texture_data->data[index], texture_data->data[index + 1],
-                  texture_data->data[index + 2], texture_data->data[index + 3]);
-        pixel *= get_ppm_export_scale<T>();
-
-        file << (u16)pixel.x << " " << (u16)pixel.y << " " << (u16)pixel.z
-             << "\n";
-      }
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, format,
+                   get_opengl_type<T>(), nullptr);
     }
   }
 
 public:
   u32 id;
-  texture<T> *texture_data;
+
+  u8 components;
+
+  u16 width;
+  u16 height;
 };
