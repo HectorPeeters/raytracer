@@ -32,7 +32,11 @@ public:
   opengl_texture(opengl_texture &&texture)
       : id(texture.id), texture_data(texture_data) {}
 
-  opengl_texture(texture<T> *texture) : texture_data(texture) {
+  opengl_texture(texture<T> *texture) : texture_data(texture) {}
+
+  void init() {
+    texture_data->init();
+
     // generate the OpenGL texture
     glGenTextures(1, &id);
     // bind the OpenGL texture
@@ -45,12 +49,16 @@ public:
     u16 format = opengl_texture_format(texture_data->components);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_data->width,
-                 texture_data->height, 0, format, get_opengl_type<T>(), nullptr);
+                 texture_data->height, 0, format, get_opengl_type<T>(),
+                 nullptr);
 
     LDEBG("Generated texture with id %d", id);
   }
 
-  ~opengl_texture() { glDeleteTextures(1, &id); }
+  void destroy() {
+    glDeleteTextures(1, &id);
+    texture_data->destroy();
+  }
 
   void update_contents() {
     // bind the texture

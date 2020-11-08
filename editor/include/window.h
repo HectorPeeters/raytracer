@@ -6,17 +6,28 @@
 
 #include "core.h"
 
-struct window_t {
+class window {
+public:
+  window(u16 width, u16 height, const char *title);
+
+  void init();
+  void destroy();
+
+  void poll_events();
+  void update();
+
+  bool should_close();
+
+  inline GLFWwindow *get_glfw_window() { return glfw_window; }
+
+  inline void set_size(u16 w, u16 h) {
+    width = w;
+    height = h;
+  }
+
+private:
   GLFWwindow *glfw_window;
   u16 width;
   u16 height;
+  const char *title;
 };
-
-struct window_t *window_create(u16 width, u16 height, const char *title);
-
-void window_input();
-void window_update(struct window_t *window);
-
-bool window_should_close(struct window_t *window);
-
-void window_destroy(struct window_t *window);

@@ -3,6 +3,7 @@
 
 int main() {
   application app;
+  app.init();
 
   LINFO("Startup complete");
 
@@ -10,6 +11,8 @@ int main() {
   }
 
   LINFO("Shutting down...");
+
+  app.destroy();
 
   return 0;
 }

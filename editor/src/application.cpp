@@ -12,17 +12,24 @@
 #include "theme.h"
 
 application::application()
-    : window(window_create(1920 / 3 * 2, 1080 / 3 * 2, "Raytracer")),
+    : editor_window(window(1920 / 3 * 2, 1080 / 3 * 2, "Raytracer")),
       running(true),
       state(render_state_create(render_settings_create(1920, 1080, 1))),
-      texture(opengl_texture<f32>(&state.buffer)) {
+      texture(opengl_texture<f32>(&state.buffer)) {}
+
+void application::init() {
+  editor_window.init();
+
+texture.init();
 
   for (int i = 0; i < state.buffer.width; i++) {
-    for (int j = 0; j < state.buffer.height; j++)
+    for (int j = 0; j < state.buffer.height; j++) {
       state.buffer.set(i, j,
                        vec4f(i / (f32)state.buffer.width,
                              j / (f32)state.buffer.height, 1.0f, 1.0f));
+    }
   }
+
   texture.update_contents();
 
   imgui_init();
@@ -30,15 +37,15 @@ application::application()
   theme_cherry();
 }
 
-application::~application() {
+void application::destroy() {
+  texture.destroy();
   ImGui::DestroyContext();
-
-  window_destroy(window);
+  editor_window.destroy();
 }
 
 bool application::update() {
-  window_input();
-  running = !window_should_close(window);
+  editor_window.poll_events();
+  running = !editor_window.should_close();
 
   glClear(GL_COLOR_BUFFER_BIT);
 
@@ -49,7 +56,7 @@ bool application::update() {
 
   imgui_end_frame();
 
-  window_update(window);
+  editor_window.update();
 
   return running;
 }
@@ -71,7 +78,7 @@ void application::imgui_init() {
     style.Colors[ImGuiCol_WindowBg].w = 1.0f;
   }
 
-  if (!ImGui_ImplGlfw_InitForOpenGL(window->glfw_window, true)) {
+  if (!ImGui_ImplGlfw_InitForOpenGL(editor_window.get_glfw_window(), true)) {
     LERR("Failed to initialize ImGui GLFW");
     return;
   }

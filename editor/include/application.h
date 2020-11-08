@@ -8,7 +8,10 @@
 class application {
 public:
   application();
-  ~application();
+
+  void init();
+  void destroy();
+
   bool update();
 
 private:
@@ -23,7 +26,7 @@ private:
 
 private:
   bool running;
-  struct window_t *window;
   struct render_state_t state;
   opengl_texture<f32> texture;
+  window editor_window;
 };
