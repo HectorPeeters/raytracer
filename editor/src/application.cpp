@@ -44,6 +44,8 @@ bool application::update() {
 
   imgui_begin_frame();
 
+  draw_menu_bar();
+
   ImGui::ShowDemoWindow();
 
   for (ui_panel *panel : panels) {
@@ -59,6 +61,26 @@ bool application::update() {
   editor_window.update();
 
   return running;
+}
+
+void application::draw_menu_bar() {
+  if (ImGui::BeginMainMenuBar()) {
+    if (ImGui::BeginMenu("File")) {
+      if (ImGui::MenuItem("Exit")) {
+        running = false;
+      }
+      ImGui::EndMenu();
+    }
+    if (ImGui::BeginMenu("Window")) {
+      for (const auto &panel : panels) {
+        if (ImGui::MenuItem(panel->get_title(), nullptr, panel->showing)) {
+          panel->showing = !panel->showing;
+        }
+      }
+      ImGui::EndMenu();
+    }
+    ImGui::EndMainMenuBar();
+  }
 }
 
 void application::imgui_init() {

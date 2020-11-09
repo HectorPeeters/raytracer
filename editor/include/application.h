@@ -25,6 +25,8 @@ public:
   }
 
 private:
+  void draw_menu_bar();
+
   void imgui_init();
   void imgui_destroy();
 

@@ -16,6 +16,7 @@ void raytrace_panel::draw(application &app) {
 
   ImGui::Columns(2);
   {
+
     if (ImGui::BeginMenuBar()) {
       if (ImGui::MenuItem("Save")) {
       }
