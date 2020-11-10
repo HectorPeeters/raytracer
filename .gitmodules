@@ -7,3 +7,6 @@
 [submodule "libs/parson"]
 	path = libs/parson
 	url = git@github.com:kgabis/parson.git
+[submodule "libs/tinyobjloader"]
+	path = libs/tinyobjloader
+	url = git@github.com:tinyobjloader/tinyobjloader.git

@@ -41,11 +41,20 @@ project "Editor"
     targetdir "bin/%{cfg.buildcfg}"
     objdir "obj/%{cfg.buildcfg}"
 
-    includedirs { "editor/include/", "libs/glad/include/", "libs/glfw/include/", "libs/imgui/", "libs/imgui/examples", "libs/parson", "include/" }
+    includedirs { 
+      "include/",
+      "editor/include/", 
+      "libs/glad/include/", 
+      "libs/glfw/include/", 
+      "libs/imgui/", 
+      "libs/imgui/examples", 
+      "libs/parson", 
+      "libs/tinyobjloader"
+    }
     
     files { "editor/src/*.cpp", "editor/src/panels/*.cpp" }
 
-    links { "GLFW", "GLAD", "ImGui", "Parson", "Raytracer" }
+    links { "GLFW", "GLAD", "ImGui", "Parson", "Raytracer", "TinyObjLoader" }
 
     filter "system:linux"
         links { "dl", "pthread" }
@@ -82,3 +91,4 @@ include "libs/glad.lua"
 include "libs/imgui.lua"
 include "libs/parson.lua"
 include "libs/catch2.lua"
+include "libs/tinyobjloader.lua"
