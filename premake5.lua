@@ -21,9 +21,11 @@ project "Raytracer"
     targetdir "bin/%{cfg.buildcfg}"
     objdir "obj/%{cfg.buildcfg}"
 
-    includedirs { "include/" }
-    
+    includedirs { "include/", "libs/tinyobjloader/" }
+
     files { "src/*.cpp" }
+
+    links { "TinyObjLoader" }
 
     filter "system:linux"
         links { "dl", "pthread" }
@@ -48,13 +50,12 @@ project "Editor"
       "libs/glfw/include/", 
       "libs/imgui/", 
       "libs/imgui/examples", 
-      "libs/parson", 
-      "libs/tinyobjloader"
+      "libs/parson"
     }
     
     files { "editor/src/*.cpp", "editor/src/panels/*.cpp" }
 
-    links { "GLFW", "GLAD", "ImGui", "Parson", "Raytracer", "TinyObjLoader" }
+    links { "GLFW", "GLAD", "ImGui", "Parson", "Raytracer" }
 
     filter "system:linux"
         links { "dl", "pthread" }
