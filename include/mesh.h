@@ -7,9 +7,6 @@
 #include "math/vec3.h"
 
 struct index {
-  // index: vertex 0
-  // index + 1: vertex 1
-  // index + 2: vertex 2
   u32 vertex_start_index;
   u32 normal_start_index;
   u32 texture_start_index;
@@ -33,5 +30,5 @@ private:
   std::vector<vec3f> normals;
   std::vector<vec2f> texture_coords;
 
-  std::vector<struct index> triangles;
+  std::vector<u32> vertex_indices;
 };

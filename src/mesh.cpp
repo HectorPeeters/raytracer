@@ -22,16 +22,7 @@ void mesh::init() {
                              attributes.vertices[i + 2]));
   }
 
-  for (u32 i = 0; i < attributes.normals.size(); i += 3) {
-    normals.push_back(vec3f(attributes.normals[i + 0],
-                            attributes.normals[i + 1],
-                            attributes.normals[i + 2]));
-  }
-
-  for (u32 i = 0; i < attributes.texcoords.size(); i += 2) {
-    texture_coords.push_back(
-        vec2f(attributes.normals[i + 0], attributes.normals[i + 1]));
-  }
+  std::vector<tinyobj::index_t> indices;
 
   for (u32 shape_index = 0; shape_index < shapes.size(); shape_index++) {
     u32 index_offset = 0;
@@ -43,16 +34,22 @@ void mesh::init() {
       u32 vertex_count = shapes[shape_index].mesh.num_face_vertices[face_index];
 
       for (u32 vertex_index = 0; vertex_index < vertex_count; vertex_index++) {
-        tinyobj::index_t index =
+        tinyobj::index_t idx =
             shapes[shape_index].mesh.indices[index_offset + vertex_index];
 
-        triangles.push_back({(u32)(3 * index.vertex_index),
-                             (u32)(3 * index.normal_index),
-                             (u32)(2 * index.texcoord_index)});
+        indices.push_back(idx);
       }
 
       index_offset += vertex_count;
     }
+  }
+
+  vertices.reserve(indices.size() * 3);
+  normals.reserve(vertices.size() * 3);
+  texture_coords.reserve(vertices.size() / 3 * 2);
+
+  for (u32 i = 0; i < vertex_indices.size(); i++) {
+
   }
 }
 
@@ -101,19 +98,19 @@ static bool muller_trumbore(const ray_t &ray, const vec3f &v0, const vec3f &v1,
 bool mesh::intersect(const ray_t &ray) {
   ray_t t_ray = ray_transform(ray, object_transform.inv_matrix);
 
-  for (const struct index &idx : triangles) {
-    const vec3f &v0 = vertices[idx.vertex_start_index];
-    const vec3f &v1 = vertices[idx.vertex_start_index + 1];
-    const vec3f &v2 = vertices[idx.vertex_start_index + 2];
-
-    f32 t;
-    vec3f normal;
-
-    if (muller_trumbore(t_ray, v0, v1, v2, t, normal)) {
-      return true;
-    }
-
-  }
+  // This is probably wrong
+  //  for (const struct index &idx : triangles) {
+  //    const vec3f &v0 = vertices[idx.vertex_start_index];
+  //    const vec3f &v1 = vertices[idx.vertex_start_index + 1];
+  //    const vec3f &v2 = vertices[idx.vertex_start_index + 2];
+  //
+  //    f32 t;
+  //    vec3f normal;
+  //
+  //    if (muller_trumbore(t_ray, v0, v1, v2, t, normal)) {
+  //      return true;
+  //    }
+  //  }
 
   return false;
 }
