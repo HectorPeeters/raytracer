@@ -96,7 +96,8 @@ static void render_single_job(render_state *state, render_job job,
 
         ray_t camera_ray = state->render_camera.get_ray(u, v);
 
-        bool hit = sphere.intersect(camera_ray);
+        intersection inter;
+        bool hit = sphere.intersect(camera_ray, inter);
 
         if (hit) {
           result += vec4f(0.0f, 0.0f, 1.0f, 1.0f);

@@ -3,6 +3,12 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 
+mesh::mesh(std::vector<vec3f> vertices, std::vector<vec3f> normals,
+           std::vector<vec2f> texture_coords, std::vector<u32> indices,
+           transform object_transform)
+    : intersectable(object_transform), vertices(vertices), normals(normals),
+      texture_coords(texture_coords), indices(indices) {}
+
 void mesh::init() {
   tinyobj::attrib_t attributes;
 
@@ -48,8 +54,7 @@ void mesh::init() {
   normals.reserve(vertices.size() * 3);
   texture_coords.reserve(vertices.size() / 3 * 2);
 
-  for (u32 i = 0; i < vertex_indices.size(); i++) {
-
+  for (u32 i = 0; i < indices.size(); i++) {
   }
 }
 
